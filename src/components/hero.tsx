@@ -2,8 +2,8 @@ import Image from "next/image";
 
 export default function Hero() {
   return (
-    <div className="w-[80vw] h-[80vh] border-2 border-black mx-auto place-items-center mt-4 rounded-md overflow-clip">
-      <div className="absolute z-10 flex flex-col place-items-center justify-center gap-2 border-2">
+    <div className="w-[80vw] h-[80vh]  mx-auto place-items-center mt-4 rounded-md overflow-clip">
+      <div className="absolute z-10 flex flex-col place-items-center justify-center top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 gap-2">
         <h1 className="text-white text-4xl font-bold italic">
           Welcome to Vishwakarma Woodworks.
         </h1>
