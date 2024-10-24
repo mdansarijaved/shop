@@ -1,13 +1,10 @@
+// app/actions/product.ts
+"use server";
+
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { Prisma, Product } from "@prisma/client";
+import { Product } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-interface ProductsResponse {
-  products: Product[];
-  totalPages: number;
-  currentPage: number;
-}
 
 interface ProductFormData {
   name: string;
@@ -15,28 +12,27 @@ interface ProductFormData {
   price: number;
   stock: number;
   categoryId: string;
-  images: string[]; // Array of image URLs
+  images: string[];
 }
 
-export async function createProduct(data: ProductFormData) {
+export async function createProduct(data: ProductFormData): Promise<{
+  success?: string;
+  error?: string;
+  product?: Product;
+}> {
   try {
-    // Get the current session
     const session = await auth();
 
-    // Check if user is authenticated and is an admin
     if (!session || !session.user || session.user.role !== "ADMIN") {
       return { error: "Unauthorized. Only admins can create products." };
     }
 
-    // Basic validation
     if (!data.name || !data.description || !data.price || !data.categoryId) {
       return { error: "Missing required fields" };
     }
 
-    // Generate a slug from the product name
     const slug = generateSlug(data.name);
 
-    // Check if product with similar slug exists
     const existingProduct = await db.product.findFirst({
       where: { slug },
     });
@@ -45,7 +41,6 @@ export async function createProduct(data: ProductFormData) {
       return { error: "A product with similar name already exists" };
     }
 
-    // Create the product with associated images
     const product = await db.product.create({
       data: {
         name: data.name,
@@ -66,7 +61,6 @@ export async function createProduct(data: ProductFormData) {
       },
     });
 
-    // Revalidate the products page and product detail page
     revalidatePath("/admin/products");
     revalidatePath(`/products/${product.slug}`);
 
