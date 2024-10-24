@@ -59,6 +59,7 @@ const RAW_RUNTIME_STATE =
           ["class-variance-authority", "npm:0.7.0"],\
           ["clsx", "npm:2.1.1"],\
           ["cobe", "npm:0.6.3"],\
+          ["embla-carousel-react", "virtual:30ec0dd588f427d25a18f3809ad8c7607df480cd4b28cd13288d831aa941ba29d5096ae64e981158a70385cbb33afb24d2355a4d2329fb8e7a3772439bdf151b#npm:8.3.0"],\
           ["eslint", "npm:8.57.1"],\
           ["eslint-config-next", "virtual:30ec0dd588f427d25a18f3809ad8c7607df480cd4b28cd13288d831aa941ba29d5096ae64e981158a70385cbb33afb24d2355a4d2329fb8e7a3772439bdf151b#npm:14.1.4"],\
           ["framer-motion", "virtual:30ec0dd588f427d25a18f3809ad8c7607df480cd4b28cd13288d831aa941ba29d5096ae64e981158a70385cbb33afb24d2355a4d2329fb8e7a3772439bdf151b#npm:11.11.9"],\
@@ -3387,6 +3388,61 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["embla-carousel", [\
+      ["npm:8.3.0", {\
+        "packageLocation": "../../../.yarn/berry/cache/embla-carousel-npm-8.3.0-e4156f47d5-10c0.zip/node_modules/embla-carousel/",\
+        "packageDependencies": [\
+          ["embla-carousel", "npm:8.3.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["embla-carousel-react", [\
+      ["npm:8.3.0", {\
+        "packageLocation": "../../../.yarn/berry/cache/embla-carousel-react-npm-8.3.0-33728edc9b-10c0.zip/node_modules/embla-carousel-react/",\
+        "packageDependencies": [\
+          ["embla-carousel-react", "npm:8.3.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:30ec0dd588f427d25a18f3809ad8c7607df480cd4b28cd13288d831aa941ba29d5096ae64e981158a70385cbb33afb24d2355a4d2329fb8e7a3772439bdf151b#npm:8.3.0", {\
+        "packageLocation": "./.yarn/__virtual__/embla-carousel-react-virtual-222a772056/4/.yarn/berry/cache/embla-carousel-react-npm-8.3.0-33728edc9b-10c0.zip/node_modules/embla-carousel-react/",\
+        "packageDependencies": [\
+          ["embla-carousel-react", "virtual:30ec0dd588f427d25a18f3809ad8c7607df480cd4b28cd13288d831aa941ba29d5096ae64e981158a70385cbb33afb24d2355a4d2329fb8e7a3772439bdf151b#npm:8.3.0"],\
+          ["@types/react", "npm:18.3.11"],\
+          ["embla-carousel", "npm:8.3.0"],\
+          ["embla-carousel-reactive-utils", "virtual:222a77205604210693d4d8bed492d4532f357050544c7e482c0dcfaafd8cc0b8f4db33ca6fd57ae943fe92bae72515f22dfcebada05e7ec54c085b3f6577c145#npm:8.3.0"],\
+          ["react", "npm:18.3.1"]\
+        ],\
+        "packagePeers": [\
+          "@types/react",\
+          "react"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["embla-carousel-reactive-utils", [\
+      ["npm:8.3.0", {\
+        "packageLocation": "../../../.yarn/berry/cache/embla-carousel-reactive-utils-npm-8.3.0-9e0fe4b4ce-10c0.zip/node_modules/embla-carousel-reactive-utils/",\
+        "packageDependencies": [\
+          ["embla-carousel-reactive-utils", "npm:8.3.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:222a77205604210693d4d8bed492d4532f357050544c7e482c0dcfaafd8cc0b8f4db33ca6fd57ae943fe92bae72515f22dfcebada05e7ec54c085b3f6577c145#npm:8.3.0", {\
+        "packageLocation": "./.yarn/__virtual__/embla-carousel-reactive-utils-virtual-86db546b7e/4/.yarn/berry/cache/embla-carousel-reactive-utils-npm-8.3.0-9e0fe4b4ce-10c0.zip/node_modules/embla-carousel-reactive-utils/",\
+        "packageDependencies": [\
+          ["embla-carousel-reactive-utils", "virtual:222a77205604210693d4d8bed492d4532f357050544c7e482c0dcfaafd8cc0b8f4db33ca6fd57ae943fe92bae72515f22dfcebada05e7ec54c085b3f6577c145#npm:8.3.0"],\
+          ["@types/embla-carousel", null],\
+          ["embla-carousel", "npm:8.3.0"]\
+        ],\
+        "packagePeers": [\
+          "@types/embla-carousel",\
+          "embla-carousel"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["emoji-regex", [\
       ["npm:8.0.0", {\
         "packageLocation": "../../../.yarn/berry/cache/emoji-regex-npm-8.0.0-213764015c-10c0.zip/node_modules/emoji-regex/",\
@@ -4523,6 +4579,7 @@ const RAW_RUNTIME_STATE =
           ["class-variance-authority", "npm:0.7.0"],\
           ["clsx", "npm:2.1.1"],\
           ["cobe", "npm:0.6.3"],\
+          ["embla-carousel-react", "virtual:30ec0dd588f427d25a18f3809ad8c7607df480cd4b28cd13288d831aa941ba29d5096ae64e981158a70385cbb33afb24d2355a4d2329fb8e7a3772439bdf151b#npm:8.3.0"],\
           ["eslint", "npm:8.57.1"],\
           ["eslint-config-next", "virtual:30ec0dd588f427d25a18f3809ad8c7607df480cd4b28cd13288d831aa941ba29d5096ae64e981158a70385cbb33afb24d2355a4d2329fb8e7a3772439bdf151b#npm:14.1.4"],\
           ["framer-motion", "virtual:30ec0dd588f427d25a18f3809ad8c7607df480cd4b28cd13288d831aa941ba29d5096ae64e981158a70385cbb33afb24d2355a4d2329fb8e7a3772439bdf151b#npm:11.11.9"],\
