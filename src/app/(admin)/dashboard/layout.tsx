@@ -11,9 +11,9 @@ async function AdminLayout({ children }: { children: React.ReactNode }) {
   }
   return (
     <SidebarProvider>
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center w-full">
         <AppSidebar />
-        <main className="flex justify-start items-start h-full w-full">
+        <main className="flex  h-full w-full ">
           <SidebarTrigger />
           {children}
         </main>
