@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
-import { ThemeProvider } from "./theme-provider";
 import { FloatingNavDemo } from "@/components/navbar";
 import { Providers } from "./provider";
 
@@ -21,18 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Toaster />
-          <Providers>
-            <FloatingNavDemo />
-            {children}
-          </Providers>
-        </ThemeProvider>
+        <Toaster />
+        <Providers>
+          <FloatingNavDemo />
+          {children}
+        </Providers>
       </body>
     </html>
   );
