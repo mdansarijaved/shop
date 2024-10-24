@@ -3,7 +3,7 @@
  * @type {string[]}
  */
 
-export const publicRoutes = ["/", "/products/*"];
+export const publicRoutes = ["/", "/products", "/hello"];
 
 /**
  * An array of routes that are protected by the middleware.
