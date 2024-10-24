@@ -3,15 +3,28 @@
  * @type {string[]}
  */
 
-export const publicRoutes = ["/"];
+export const publicRoutes = ["/", "/products/*"];
 
 /**
  * An array of routes that are protected by the middleware.
  * @type {string[]}
  */
 
-export const protectedRoutes = ["/settings"];
+export const protectedRoutes = [
+  "/settings",
+  "/protected",
+  "/dashboard",
+  "/payments",
+];
 
+/**
+ * An array of authentication-related route paths.
+ *
+ * This array contains the paths for login, registration, and error handling
+ * within the authentication module of the application.
+ *
+ * @constant {string[]} authRoutes - The array of authentication route paths.
+ */
 export const authRoutes = ["/auth/login", "/auth/register", "/auth/error"];
 
 /**
@@ -21,4 +34,4 @@ export const authRoutes = ["/auth/login", "/auth/register", "/auth/error"];
  */
 export const apiAuthPrefix = "/api/auth";
 
-export const DEFAULT_LOGIN_REDIRECT = "/settings";
+export const DEFAULT_LOGIN_REDIRECT = "/";
