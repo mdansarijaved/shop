@@ -1,29 +1,44 @@
 import React from "react";
-import { HomeIcon, LogIn, User } from "lucide-react";
+import { BedSingle, HomeIcon, LogIn, ShoppingCart, User, User2, Utensils } from "lucide-react";
 import { ModeToggle } from "./theme-toggle";
 import Link from "next/link";
+import Image from "next/image";
 export function FloatingNavDemo() {
-  const navItems = [
+  const navItemsLeft = [
     {
-      name: "Home",
       link: "/",
-      icon: <HomeIcon className="w-4 h-4 " />,
+      icon: <Image src="/Ecomm-Logo.jpg" alt="Large Image" width={100} height={100} />,
     },
     {
-      name: "Login",
+      name: "Living Room",
+      link: "/",
+      icon: <HomeIcon className="lg:h-4 lg:w-4 lg:border-none lg:rounded-none lg:p-0  border-2 rounded-full p-1 w-8 h-8 hover:border-black/40" />,
+    },
+    {
+      name: "Dining Room",
       link: "/auth/login",
-      icon: <LogIn className="h-4 w-4  " />,
+      icon: <Utensils className="lg:h-4 lg:w-4 lg:border-none lg:rounded-none lg:p-0  border-2 rounded-full p-1 w-8 h-8 hover:border-black/40" />,
     },
     {
-      name: "Register",
+      name: "Bedroom",
       link: "/auth/register",
-      icon: <User className="h-4 w-4  " />,
+      icon: <BedSingle className="lg:h-4 lg:w-4 lg:border-none lg:rounded-none lg:p-0  border-2 rounded-full p-1 w-8 h-8 hover:border-black/40" />,
+    },
+  ];
+  const navItemsRight = [
+    {
+      link: "/",
+      icon: <ShoppingCart className="border-2 rounded-full p-1 w-8 h-8 hover:border-black/40"/>,
+    },
+    {
+      link: "/",
+      icon: <User2 className="border-2 rounded-full p-1 w-8 h-8 hover:border-black/40"/>,
     },
   ];
   return (
-    <div className="absolute top-2 left-0 w-full flex justify-center  z-50">
-      <div className="w-fit px-3 md:px-5 lg:px-7 xl:px-10 py-3 bg-white dark:bg-black border  flex justify-center rounded-xl items-center gap-4 md:gap-5 lg:gap-7 xl:gap-10">
-        {navItems.map((nav) => (
+    <div className=" flex z-50 place-items-center justify-between shadow-lg">
+      <div className="w-fit px-3 md:px-5 lg:px-7 xl:px-10 py-3 bg-white dark:bg-black  flex justify-center rounded-xl items-center gap-4 md:gap-5 lg:gap-7 xl:gap-10">
+        {navItemsLeft.map((nav) => (
           <Link
             href={nav.link}
             key={nav.name}
@@ -31,10 +46,26 @@ export function FloatingNavDemo() {
           >
             {nav.icon}
             {""}
+            <div className="lg:block hidden">
             {nav.name}
+            </div>
           </Link>
         ))}
-        <ModeToggle />
+      </div>
+      <div className="w-fit px-3 md:px-5 lg:px-7 xl:px-10 py-3 bg-white dark:bg-black  flex justify-center rounded-xl items-center gap-4 md:gap-5 lg:gap-7 xl:gap-6">
+        <form action="" className=" xl:w-96 ">
+          <input type="text" className="w-full border-2 border-black/30 rounded-lg px-4 py-2 " placeholder="Search for Products..."/>
+        </form>
+        {navItemsRight.map((nav) => (
+          <Link 
+          href={nav.link}
+          >
+            {nav.icon}
+          </Link>
+        ))}
+        
+        
+        {/* <ModeToggle /> */}
       </div>
     </div>
   );
