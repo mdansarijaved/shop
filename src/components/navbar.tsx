@@ -7,7 +7,7 @@ export function FloatingNavDemo() {
   const navItemsLeft = [
     {
       link: "/",
-      icon: <Image src="/Ecomm-Logo.jpg" alt="Large Image" width={100} height={100} />,
+      icon: <Image src="/Ecomm-Logo.jpg" alt="Large Image" width={100} height={100}/>,
     },
     {
       name: "Living Room",
@@ -36,8 +36,8 @@ export function FloatingNavDemo() {
     },
   ];
   return (
-    <div className=" flex z-50 place-items-center justify-between shadow-lg">
-      <div className="w-fit px-3 md:px-5 lg:px-7 xl:px-10 py-3 bg-white dark:bg-black  flex justify-center rounded-xl items-center gap-4 md:gap-5 lg:gap-7 xl:gap-10">
+    <div className=" flex z-50 place-items-center justify-between shadow-lg bg-[#fefefe]">
+      <div className="w-fit px-3 md:px-5 lg:px-7 xl:px-10 py-1 bg-[#fefefe] dark:bg-black  flex justify-center rounded-xl items-center gap-4 md:gap-5 lg:gap-7 xl:gap-10">
         {navItemsLeft.map((nav) => (
           <Link
             href={nav.link}
@@ -52,9 +52,9 @@ export function FloatingNavDemo() {
           </Link>
         ))}
       </div>
-      <div className="w-fit px-3 md:px-5 lg:px-7 xl:px-10 py-3 bg-white dark:bg-black  flex justify-center rounded-xl items-center gap-4 md:gap-5 lg:gap-7 xl:gap-6">
+      <div className="w-fit px-3 md:px-5 lg:px-7 xl:px-10 py-3 bg-[#fefefe] dark:bg-black  flex justify-center rounded-xl items-center gap-4 md:gap-5 lg:gap-7 xl:gap-6">
         <form action="" className=" xl:w-96 ">
-          <input type="text" className="w-full border-2 border-black/30 rounded-lg px-4 py-2 " placeholder="Search for Products..."/>
+          <input type="text" className="w-full bg-[#ecedeb]  px-4 py-2 placeholder:text-[#757575] outline-none" placeholder="Search for Products..."/>
         </form>
         {navItemsRight.map((nav) => (
           <Link 
