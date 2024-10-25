@@ -10,7 +10,7 @@ export default function Hero() {
         <p className="text-white font-semibold">
           New in from Vishwakarma Woodworks. Traditional craftmanship.
         </p>
-        <button className="bg-gray-700/50 hover:bg-gray-700/70 px-6 py-3 mt-4 text-white border-2 border-black/30 rounded-md">
+        <button className="bg-gray-700/50 hover:bg-gray-700/70 px-6 py-3 mt-4 text-white border border-black/30 rounded-md">
           Shop Products
         </button>
       </div>
