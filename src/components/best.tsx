@@ -9,80 +9,74 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Image from "next/image";
+import { MoveUpRight } from "lucide-react";
 
 export function BestSeller() {
   const products = [
     {
-      name: "TV Stand",
+      name: "Wooden Wardrobe",
       icon: (
         <Image
-          src="/Sofas/sofa1.webp"
+          src="/cupboard/cupboard3.webp"
           alt="Large Image"
           width={500}
           height={100}
           className="w-full h-full"
         />
       ),
+      price: 2550,
     },
     {
-      name: "Dinning Table",
+      name: "Wooden TV Stand",
       icon: (
         <Image
-          src="/Sofas/sofa1.webp"
+          src="/tvstand/TVstand3.webp"
           alt="Large Image"
           width={500}
           height={100}
           className="w-full h-full"
         />
       ),
+      price: 13500,
     },
     {
-      name: "Sofa",
+      name: "ceiling fan",
       icon: (
         <Image
-          src="/Sofas/sofa1.webp"
+          src="/ceilingfan/ceilingfan1.webp"
           alt="Large Image"
           width={500}
           height={100}
           className="w-full h-full"
         />
       ),
+      price: 1999,
     },
     {
-      name: "wardrobe",
+      name: "Wooden Door Design",
       icon: (
         <Image
-          src="/Sofas/sofa1.webp"
+          src="/door/door1.webp"
           alt="Large Image"
           width={500}
           height={100}
           className="w-full h-full"
         />
       ),
+      price: 4500,
     },
     {
       name: "Bed",
       icon: (
         <Image
-          src="/Sofas/sofa1.webp"
+          src="/Bed/Bed2.webp"
           alt="Large Image"
           width={500}
           height={100}
           className="w-full h-full"
         />
       ),
-    },
-    {
-      name: "Temple",
-      icon: (
-        <Image
-          src="/Sofas/sofa1.webp"
-          alt="Large Image"
-          width={500}
-          height={100}
-          className="w-full h-full"
-        />
-      ),
+      price: 2375,
     },
   ];
 
@@ -100,13 +94,19 @@ export function BestSeller() {
         <CarouselContent>
           {products.map((product, index) => (
             <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-              <div className="p-1">
+              <div className=" m-1 group relative cursor-pointer">
                 <Card>
-                  <CardContent className="flex items-center justify-center pt-4 aspect-square flex-col">
-                    {product.icon}
-                    <span className="mt-2 uppercase font-semibold">
-                      {product.name}
+                  <CardContent className="flex bg-[#ecedeb]">
+                      <div className=" h-96 w-96 group-hover:opacity-50">
+                        {product.icon}
+                    </div>
+                    <span className="hidden rounded-full border-2 p-4 border-blue-900/30 cursor-pointer group-hover:block absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 group-hover:animate-pulse">
+                    <MoveUpRight className="size-10 text-blue-900"/>
                     </span>
+                    <div className="mt-4 uppercase absolute bottom-0 bg-black/70 group-hover:bg-black/0 transition-all duration-500 group-hover:text-black py-2 w-96 pl-6 z-10 font-semibold text-white">
+                      <p className="text-lg">{product.name}</p>
+                      <p className="text-2xl">&#8377;{product.price}</p>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
