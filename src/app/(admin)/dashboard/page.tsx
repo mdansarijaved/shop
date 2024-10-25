@@ -50,7 +50,7 @@ function AdminDashboard() {
               />
             </div>
             <div className="mt-8">
-              <Card>
+              <Card className="">
                 <CardHeader>
                   <CardTitle>Recent Activity</CardTitle>
                 </CardHeader>
@@ -92,8 +92,8 @@ function DashboardCard({
   description: string;
 }) {
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+    <Card className="">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 ">
         <CardTitle className=" font-medium">{title}</CardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"

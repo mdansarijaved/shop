@@ -1,5 +1,4 @@
 "use client";
-import { motion } from "framer-motion";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,8 +26,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Icons } from "@/components/ui/icons";
 import Link from "next/link";
 import { registerSchema } from "@/zod/schema";
-import { AnimatePresence } from "framer-motion";
-import { CanvasRevealEffect } from "@/components/ui/canvas-reveal-effect";
 import { register } from "@/actions/register";
 import { toast } from "sonner";
 
@@ -49,7 +46,6 @@ const loginUser = async (data: LoginFormValues) => {
 
 function RegisterPage() {
   const [authError, setAuthError] = useState<string | null>(null);
-  const [hovered, setHovered] = useState(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(registerSchema),
@@ -70,12 +66,8 @@ function RegisterPage() {
     loginMutation.mutate(data);
   };
   return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:bg-gradient-to-b dark:from-neutral-900 dark:to-neutral-950  flex items-center justify-center p-4 relative"
-    >
-      <Card className="max-w-md w-full relative z-50">
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:bg-gradient-to-b dark:from-neutral-900 dark:to-neutral-950  flex items-center justify-center p-4 relative">
+      <Card className="max-w-md w-full relative z-50 ">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">
             SignUp
@@ -197,7 +189,7 @@ function RegisterPage() {
             </Button>
           </div>
         </CardContent>
-        <CardFooter className="flex flex-wrap items-center justify-between gap-2">
+        <CardFooter className="flex flex-wrap items-center justify-between gap-2 ">
           <div className="text-sm text-muted-foreground">
             <span className="mr-1 hidden sm:inline-block">
               already have an account?
@@ -217,30 +209,6 @@ function RegisterPage() {
           </Link>
         </CardFooter>
       </Card>
-      <div className="xl:hidden">
-        <AnimatePresence>
-          {hovered && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="h-full w-full absolute inset-0"
-            >
-              <CanvasRevealEffect
-                animationSpeed={5}
-                containerClassName="bg-transparent"
-                colors={[
-                  [59, 130, 246],
-                  [139, 92, 246],
-                ]}
-                opacities={[0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.4, 0.4, 0.4, 1]}
-                dotSize={2}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <div className="absolute inset-0 [mask-image:radial-gradient(400px_at_center,white,transparent)] bg-black/50 dark:bg-black/90" />
-      </div>
     </div>
   );
 }

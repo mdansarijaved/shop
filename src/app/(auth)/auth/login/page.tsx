@@ -70,7 +70,7 @@ export default function LoginPage() {
   };
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200  flex items-center justify-center p-4 relative ">
-      <Card className="max-w-md w-full relative z-50">
+      <Card className="max-w-md w-full relative z-50 ">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">
             Login
@@ -166,7 +166,7 @@ export default function LoginPage() {
             </Button>
           </div>
         </CardContent>
-        <CardFooter className="flex flex-wrap items-center justify-between gap-2">
+        <CardFooter className="flex flex-wrap items-center justify-between gap-2 ">
           <div className="text-sm text-muted-foreground">
             <span className="mr-1 hidden sm:inline-block">
               Don&apos;t have an account?

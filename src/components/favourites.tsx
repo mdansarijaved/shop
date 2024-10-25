@@ -1,13 +1,5 @@
 import * as React from "react";
 
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import Image from "next/image";
 
 export function Favourites() {
@@ -95,16 +87,26 @@ export function Favourites() {
       </h1>
       <div className="flex gap-4 mx-auto w-[80%] justify-between mt-8">
         {productsUp.map((item) => (
-          <div className=" items-center cursor-pointer place-content-center hover:scale-105 transition-all duration-300 text-center font-bold uppercase">
-            <div className="h-96 w-96 object-cover hover:shadow-lg">{item.icon}</div>
+          <div
+            className=" items-center cursor-pointer place-content-center hover:scale-105 transition-all duration-300 text-center font-bold uppercase"
+            key={item.name}
+          >
+            <div className="h-96 w-96 object-cover hover:shadow-lg">
+              {item.icon}
+            </div>
             <p className="text-xl mt-2 tracking-wider">{item.name}</p>
           </div>
         ))}
       </div>
       <div className="flex gap-4 mx-auto w-[80%] justify-between mt-10">
         {productsDown.map((item) => (
-          <div className=" items-center cursor-pointer place-content-center hover:scale-105 transition-all duration-300 text-center font-bold uppercase">
-            <div className="h-96 w-96 object-cover hover:shadow-lg">{item.icon}</div>
+          <div
+            className=" items-center cursor-pointer place-content-center hover:scale-105 transition-all duration-300 text-center font-bold uppercase"
+            key={item.name}
+          >
+            <div className="h-96 w-96 object-cover hover:shadow-lg">
+              {item.icon}
+            </div>
             <p className="text-xl mt-2 tracking-wider">{item.name}</p>
           </div>
         ))}
