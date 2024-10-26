@@ -17,8 +17,9 @@ export default function Hero() {
       <div className="relative w-full h-full">
         <Image
           src="/Sofas/sofa1.webp"
-          layout="fill"
-          objectFit="cover"
+          width={1000}
+          height={1000}
+          className="w-full h-full object-cover "
           alt="Sofa Image"
         />
       </div>

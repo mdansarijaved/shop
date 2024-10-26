@@ -2,6 +2,7 @@
 import * as z from "zod";
 import { loginSchema } from "@/zod/schema";
 import { signIn } from "@/auth";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const login = async (values: z.infer<typeof loginSchema>) => {
   const validatesFields = loginSchema.safeParse(values);
@@ -13,7 +14,7 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: "/",
+      redirectTo: DEFAULT_LOGIN_REDIRECT,
     });
   } catch (error) {
     throw error;

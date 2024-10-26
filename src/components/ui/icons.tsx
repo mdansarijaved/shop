@@ -1,7 +1,5 @@
 import { Loader2 } from "lucide-react";
 import { LucideProps } from "lucide-react";
-import dynamicIconImports from "lucide-react/dynamicIconImports";
-import dynamic from "next/dynamic";
 
 export const Icons = {
   spinner: Loader2,
