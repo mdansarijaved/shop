@@ -2,15 +2,17 @@ import React from "react";
 import {
   BedSingle,
   HomeIcon,
-  LogIn,
   ShoppingCart,
-  User,
   User2,
   Utensils,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-export function FloatingNavDemo() {
+import { auth, signOut } from "@/auth";
+import { Button, buttonVariants } from "./ui/button";
+import { cn } from "@/lib/utils";
+export async function FloatingNavDemo() {
+  const user = await auth();
   const navItemsLeft = [
     {
       link: "/",
@@ -62,15 +64,15 @@ export function FloatingNavDemo() {
   return (
     <div className=" flex z-50 place-items-center justify-between shadow-lg bg-[#fefefe]">
       <div className="w-fit px-3 md:px-5 lg:px-7 xl:px-10 py-1 bg-[#fefefe] dark:bg-black  md:flex justify-center rounded-xl items-center gap-4 md:gap-5 lg:gap-7 xl:gap-10 hidden">
-        {navItemsLeft.map((nav) => (
+        {navItemsLeft.map((nav, index) => (
           <Link
             href={nav.link}
-            key={nav.name}
+            key={index}
             className="flex justify-center items-center gap-2 "
           >
             {nav.icon}
             {""}
-            <div className="lg:block hidden">{nav.name}</div>
+            <div className="xl:block hidden">{nav.name}</div>
           </Link>
         ))}
       </div>
@@ -82,13 +84,28 @@ export function FloatingNavDemo() {
             placeholder="Search for Products..."
           />
         </form>
-        {navItemsRight.map((nav) => (
-          <Link key={nav.link} href={nav.link}>
+        {navItemsRight.map((nav, index) => (
+          <Link key={index} href={nav.link}>
             {nav.icon}
           </Link>
         ))}
-
-        {/* <ModeToggle /> */}
+        {user ? (
+          <form
+            action={async () => {
+              "use server";
+              await signOut();
+            }}
+          >
+            <Button type="submit">Sign Out</Button>
+          </form>
+        ) : (
+          <Link
+            href={"/auth/login"}
+            className={cn(buttonVariants({ variant: "outline" }))}
+          >
+            Login
+          </Link>
+        )}
       </div>
     </div>
   );
