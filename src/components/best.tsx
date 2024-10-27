@@ -21,7 +21,7 @@ export function BestSeller() {
           alt="Large Image"
           width={500}
           height={100}
-          className="w-full h-full"
+          className="w-full h-full object-cover"
         />
       ),
       price: 2550,
@@ -34,7 +34,7 @@ export function BestSeller() {
           alt="Large Image"
           width={500}
           height={100}
-          className="w-full h-full"
+          className="w-full h-full object-cover"
         />
       ),
       price: 13500,
@@ -47,23 +47,10 @@ export function BestSeller() {
           alt="Large Image"
           width={500}
           height={100}
-          className="w-full h-full"
+          className="w-full h-full object-cover"
         />
       ),
       price: 1999,
-    },
-    {
-      name: "Wooden Door Design",
-      icon: (
-        <Image
-          src="/door/door1.webp"
-          alt="Large Image"
-          width={500}
-          height={100}
-          className="w-full h-full"
-        />
-      ),
-      price: 4500,
     },
     {
       name: "Bed",
@@ -73,7 +60,7 @@ export function BestSeller() {
           alt="Large Image"
           width={500}
           height={100}
-          className="w-full h-full"
+          className="w-full h-full object-cover"
         />
       ),
       price: 2375,
@@ -89,21 +76,21 @@ export function BestSeller() {
         opts={{
           align: "start",
         }}
-        className="w-[80%] mx-auto my-6"
+        className="w-[70%] sm:w-[80%] mx-auto my-6 border-2 sm:border-0 border-black/20"
       >
         <CarouselContent>
           {products.map((product, index) => (
             <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-              <div className=" m-1 group relative cursor-pointer">
+              <div className=" m-1 group relative cursor-pointer ">
                 <Card>
                   <CardContent className="flex bg-[#ecedeb] p-0">
-                    <div className=" h-96 w-96 group-hover:opacity-50">
+                    <div className=" group-hover:opacity-50 h-auto w-full" >
                       {product.icon}
                     </div>
                     <span className="hidden rounded-full border-2 p-4 border-blue-900/30 cursor-pointer group-hover:block absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 group-hover:animate-pulse">
                       <MoveUpRight className="size-10 text-blue-900" />
                     </span>
-                    <div className="mt-4 uppercase absolute bottom-0 bg-black/70 group-hover:bg-black/0 transition-all duration-500 group-hover:text-black py-2 w-96 pl-6 z-10 font-semibold text-white">
+                    <div className="mt-4 uppercase absolute bottom-0 bg-black/70 group-hover:bg-black/0 transition-all duration-500 group-hover:text-black py-2 w-full pl-6 z-10 font-semibold text-white">
                       <p className="text-lg">{product.name}</p>
                       <p className="text-2xl">&#8377;{product.price}</p>
                     </div>

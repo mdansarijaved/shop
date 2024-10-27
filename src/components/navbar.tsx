@@ -61,7 +61,7 @@ export function FloatingNavDemo() {
   ];
   return (
     <div className=" flex z-50 place-items-center justify-between shadow-lg bg-[#fefefe]">
-      <div className="w-fit px-3 md:px-5 lg:px-7 xl:px-10 py-1 bg-[#fefefe] dark:bg-black  flex justify-center rounded-xl items-center gap-4 md:gap-5 lg:gap-7 xl:gap-10">
+      <div className="w-fit px-3 md:px-5 lg:px-7 xl:px-10 py-1 bg-[#fefefe] dark:bg-black  md:flex justify-center rounded-xl items-center gap-4 md:gap-5 lg:gap-7 xl:gap-10 hidden">
         {navItemsLeft.map((nav) => (
           <Link
             href={nav.link}
@@ -74,7 +74,7 @@ export function FloatingNavDemo() {
           </Link>
         ))}
       </div>
-      <div className="w-fit px-3 md:px-5 lg:px-7 xl:px-10 py-3 bg-[#fefefe] dark:bg-black  flex justify-center rounded-xl items-center gap-4 md:gap-5 lg:gap-7 xl:gap-6">
+      <div className="w-fit px-3 md:px-5 lg:px-7 xl:px-10 py-3 bg-[#fefefe] dark:bg-black  flex justify-center rounded-xl items-center gap-4 md:gap-5 lg:gap-7 xl:gap-6 mx-auto md:mx-0">
         <form action="" className=" xl:w-96 ">
           <input
             type="text"

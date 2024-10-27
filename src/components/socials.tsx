@@ -26,14 +26,14 @@ export default function Socials() {
   ];
 
   const icons = [
-    <IconBrandFacebook key="facebook" />,
-    <TwitterLogoIcon key="twitter" />,
-    <InstagramLogoIcon key="instagram" />,
+    <IconBrandFacebook key="facebook" className="lg:size-8 size-5" />,
+    <TwitterLogoIcon key="twitter" className="lg:size-8 size-5" />,
+    <InstagramLogoIcon key="instagram" className="lg:size-8 size-5" />,
   ];
   return (
     <div className="w-[80%] mx-auto">
       <div className=" flex justify-between border-y py-6">
-        <div className="flex gap-8 place-content-center place-items-center">
+        <div className="md:flex gap-8 place-content-center place-items-center hidden">
           {contact.map((item) => (
             <div
               key={item.link}
@@ -67,7 +67,7 @@ export default function Socials() {
           width={100}
           height={100}
         />
-        <div className="flex text-sm gap-1 ml-2 text-[#757575]">
+        <div className="flex text-[0.7rem] font-semibold sm:text-sm gap-1 ml-2 text-[#757575]">
           <h1 className="cursor-pointer hover:text-[#764927]">
             Terms & Conditions
           </h1>
