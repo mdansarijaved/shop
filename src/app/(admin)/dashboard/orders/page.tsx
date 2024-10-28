@@ -30,7 +30,6 @@ async function DashboardOrder() {
     },
   });
 
-  const allProducts = prodcuts;
   const DeliveredProducts = prodcuts.filter(
     (product) => product.order.status === "DELIVERED"
   );

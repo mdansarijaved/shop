@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { Product } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { NextRequest } from "next/server";
 
 interface ProductFormData {
   name: string;
@@ -171,32 +172,136 @@ export async function getProductById(productId: string) {
   }
 }
 
-// Helper function to fetch all products with pagination
-export async function getProducts() {
+export async function getProducts(searchParams?: {
+  [key: string]: string | string[] | undefined;
+}) {
   try {
-    // Build the where clause for search
-    // const where: Prisma.ProductWhereInput = searchQuery
-    //   ? {
-    //       OR: [
-    //         { name: { contains: searchQuery, mode: "insensitive" } },
-    //         { description: { contains: searchQuery, mode: "insensitive" } },
-    //       ],
-    //     }
-    //   : {};
+    // Initialize the where clause
+    const where: any = {
+      AND: [],
+    };
 
+    // Handle search
+    const search = searchParams?.search?.toString().toLowerCase();
+    if (search) {
+      where.AND.push({
+        OR: [
+          {
+            name: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            description: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+        ],
+      });
+    }
+
+    // Handle category
+    const category = searchParams?.category?.toString();
+    if (category && category !== "all") {
+      where.AND.push({
+        category: {
+          name: {
+            equals: category,
+            mode: "insensitive",
+          },
+        },
+      });
+    }
+
+    // Handle price
+    const price = searchParams?.price?.toString();
+    if (price && price !== "all") {
+      let minPrice = 0;
+      let maxPrice: number | undefined;
+
+      switch (price) {
+        case "0-50":
+          maxPrice = 50;
+          break;
+        case "51-100":
+          minPrice = 51;
+          maxPrice = 100;
+          break;
+        case "101-200":
+          minPrice = 101;
+          maxPrice = 200;
+          break;
+        case "201-plus":
+          minPrice = 201;
+          break;
+        default:
+          break;
+      }
+
+      where.AND.push({
+        price: {
+          gte: minPrice,
+          ...(maxPrice && { lte: maxPrice }),
+        },
+      });
+    }
+
+    // Execute query
     const products = await db.product.findMany({
+      where: where.AND.length > 0 ? where : undefined,
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        stock: true,
+        images: true,
+        description: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        orderItems: {
+          select: {
+            quantity: true,
+          },
+        },
+      },
       orderBy: {
-        createdAt: "desc",
+        stock: "asc",
       },
     });
 
-    return products;
-  } catch (error) {
-    // Enhanced error logging
-    console.error("Failed to fetch products:", {
-      error: error instanceof Error ? error.message : "Unknown error",
+    const total = await db.product.count({
+      where: where.AND.length > 0 ? where : undefined,
     });
 
-    return null;
+    return {
+      products,
+      total,
+      filters: {
+        search,
+        category,
+        price,
+      },
+    };
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+    throw new Error("Failed to fetch products");
   }
 }
+
+export const getAllCategories = async () => {
+  try {
+    return await db.category.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+  } catch (error) {
+    throw new Error("Something Went wrong");
+  }
+};

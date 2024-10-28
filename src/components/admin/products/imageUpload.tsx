@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/form";
 import { useController, UseFormReturn } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { ProductFormData } from "./page";
+import { ProductFormData } from "./CreateNewProduct";
 
 function ImageUpload({
   form,
