@@ -30,7 +30,12 @@ export const register = async (values: z.infer<typeof registerSchema>) => {
       },
     });
     const verificationToken = await generateVerificatitonToken(email);
+    console.log("verification toke: ", verificationToken);
   } catch (error) {
-    throw new Error("something went wrong.");
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error("An unknown error occurred");
+    }
   }
 };

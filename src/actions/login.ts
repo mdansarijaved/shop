@@ -3,6 +3,7 @@ import * as z from "zod";
 import { loginSchema } from "@/zod/schema";
 import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { AuthError } from "next-auth";
 
 export const login = async (values: z.infer<typeof loginSchema>) => {
   const validatesFields = loginSchema.safeParse(values);
@@ -17,6 +18,13 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
       redirectTo: DEFAULT_LOGIN_REDIRECT,
     });
   } catch (error) {
-    throw error;
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          throw new Error("Invalid credentials");
+        default:
+          throw new Error("something went wrong");
+      }
+    }
   }
 };

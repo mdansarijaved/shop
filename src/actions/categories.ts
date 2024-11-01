@@ -12,6 +12,7 @@ export const fetchCategories = async () => {
   try {
     const categories = await db.category.findMany();
     console.log("categories i got called");
+    console.log(categories);
 
     if (!categories) {
       console.log("there are no categories");

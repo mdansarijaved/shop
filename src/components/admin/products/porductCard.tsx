@@ -89,7 +89,7 @@ export default function ProductCard({ product }: { product: products }) {
             </div>
             <div className="flex items-center">
               <span className="text-lg font-bold">
-                ${product.price.toFixed(2)}
+                Rs.{product.price.toFixed(2)}
               </span>
             </div>
           </div>
