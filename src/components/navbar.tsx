@@ -20,8 +20,9 @@ export async function FloatingNavDemo() {
         <Image
           src="/Ecomm-Logo.jpg"
           alt="Large Image"
-          width={100}
-          height={100}
+          width={500}
+          height={500}
+          className="h-[60px] w-[100px]"
         />
       ),
     },

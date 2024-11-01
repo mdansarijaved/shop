@@ -1,11 +1,15 @@
 import * as React from "react";
-
+import {useRouter} from 'next/navigation'
 import Image from "next/image";
 
 export function Favourites() {
+
+  const router = useRouter();
+
   const productsUp = [
     {
       name: "TV Stand",
+      category: "TV Stand",
       icon: (
         <Image
           src="/tvstand/TVstand4.webp"
@@ -15,9 +19,11 @@ export function Favourites() {
           className="object-cover h-full"
         />
       ),
+      link: "/products",
     },
     {
       name: "Dinning Table",
+      category: "Dining Table",
       icon: (
         <Image
           src="/dinningtable/dinningtable1.webp"
@@ -27,9 +33,11 @@ export function Favourites() {
           className="object-cover h-full"
         />
       ),
+      link: "/products",
     },
     {
       name: "Sofa",
+      category: "Sofa",
       icon: (
         <Image
           src="/Sofas/sofa4.webp"
@@ -39,11 +47,13 @@ export function Favourites() {
           className="object-cover h-full"
         />
       ),
+      link: "/products",
     },
   ];
   const productsDown = [
     {
       name: "wardrobe",
+      category: "Wardrobe",
       icon: (
         <Image
           src="/cupboard/cupboard2.webp"
@@ -53,9 +63,11 @@ export function Favourites() {
           className="object-cover h-full"
         />
       ),
+      link: "/products",
     },
     {
       name: "Bed",
+      category: "Bed",
       icon: (
         <Image
           src="/Bed/Bed2.webp"
@@ -65,9 +77,11 @@ export function Favourites() {
           className="object-cover h-full"
         />
       ),
+      link: "/products",
     },
     {
       name: "Temple",
+      category: "Temple",
       icon: (
         <Image
           src="/temple/temple1.webp"
@@ -77,8 +91,13 @@ export function Favourites() {
           className="object-cover h-full"
         />
       ),
+      link: "/products",
     },
   ];
+
+  const handleClick = (item) => {
+    router.push(`${item.link}?category=${item.category}`);
+  }
 
   return (
     <>
@@ -91,6 +110,7 @@ export function Favourites() {
           <div
             className=" cursor-pointer hover:scale-105 transition-all duration-300 text-center font-bold uppercase"
             key={item.name}
+            onClick={() => handleClick(item)}
           >
             <div className="h-[90%] hover:shadow-lg w-full">
               {item.icon}
@@ -104,6 +124,7 @@ export function Favourites() {
           <div
             className=" cursor-pointer hover:scale-105 transition-all duration-300 text-center font-bold uppercase"
             key={item.name}
+            onClick={() => handleClick(item)}
           >
             <div className="h-[90%] hover:shadow-lg w-full">
               {item.icon}

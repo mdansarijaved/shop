@@ -14,7 +14,6 @@ function HomeComponent() {
       <Filler />
       <BestSeller />
       <Footer />
-      <Socials />
     </div>
   );
 }

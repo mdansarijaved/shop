@@ -1,6 +1,9 @@
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Hero() {
+  const router = useRouter();
+
   return (
     <div className="w-full h-[75vh]  mx-auto place-items-center mt-8 overflow-clip">
       <div className="absolute z-10 w-full flex  flex-col place-items-center justify-center top-1/2 left-1/2  -translate-x-1/2 gap-2">
@@ -10,7 +13,7 @@ export default function Hero() {
         <p className="text-white text-sm text-center md:text-base font-semibold">
           New in from Vishwakarma Woodworks. Traditional craftmanship.
         </p>
-        <button className="bg-gray-700/50 hover:bg-gray-700/70 px-6 py-3 mt-4 text-white border border-black/30 rounded-md">
+        <button onClick={() => router.push('/products')} className="bg-gray-700/50 hover:bg-gray-700/70 px-6 py-3 mt-4 text-white border border-black/30 rounded-md">
           Shop Products
         </button>
       </div>
