@@ -27,24 +27,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { login } from "@/actions/login";
-import { AuthError } from "next-auth";
+import { toast } from "sonner";
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const loginUser = async (data: LoginFormValues) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  try {
-    await login(data);
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          throw new Error("Invalid credentials");
-        default:
-          throw new Error("something went wrong");
-      }
-    }
-  }
+  await login(data);
 };
 
 export default function LoginPage() {
@@ -52,12 +40,16 @@ export default function LoginPage() {
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: () => {
-      console.log("Login successful");
+      toast("login successfull");
     },
     onError: (error: Error) => {
       setAuthError(error.message);

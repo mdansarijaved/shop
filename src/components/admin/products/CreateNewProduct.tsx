@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { Loader2 } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
+import { format } from "date-fns";
 import {
   Form,
   FormControl,
@@ -29,6 +29,14 @@ import { toast } from "@/hooks/use-toast";
 import { fetchCategories } from "@/actions/categories";
 import { createProduct } from "@/actions/product";
 import ImageUpload from "./imageUpload";
+import { Switch } from "@/components/ui/switch";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
 
 const productSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -37,16 +45,15 @@ const productSchema = z.object({
   stock: z.number().int().nonnegative("Stock must be non-negative"),
   categoryId: z.string().min(1, "Category is required"),
   images: z.string().array(),
+  isFeatured: z.boolean().default(false),
+  isPromoted: z.boolean().default(false),
+  promotionStart: z.date().nullable(),
+  promotionEnd: z.date().nullable(),
+  discountPercent: z.number().min(0).max(100).nullable(),
 });
 
-export type ProductFormData = {
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  categoryId: string;
-  images: string[];
-};
+export type ProductFormData = z.infer<typeof productSchema>;
+
 function CreateNewProduct() {
   const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
@@ -57,6 +64,11 @@ function CreateNewProduct() {
       stock: 0,
       categoryId: "",
       images: [],
+      discountPercent: null,
+      isFeatured: false,
+      isPromoted: false,
+      promotionStart: null,
+      promotionEnd: null,
     },
   });
 
@@ -196,6 +208,154 @@ function CreateNewProduct() {
         />
 
         <ImageUpload form={form} />
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="isFeatured"
+            render={({ field }) => (
+              <FormItem className="flex items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Featured</FormLabel>
+                  <FormDescription>
+                    Display this product in featured sections
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="isPromoted"
+            render={({ field }) => (
+              <FormItem className="flex items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Promoted</FormLabel>
+                  <FormDescription>Enable promotional pricing</FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+        {form.watch("isPromoted") && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="promotionStart"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Promotion Start</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value || undefined}
+                          onSelect={field.onChange}
+                          disabled={(date) => date < new Date()}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="promotionEnd"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Promotion End</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value || undefined}
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            date < (form.watch("promotionStart") || new Date())
+                          }
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="discountPercent"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Discount Percentage</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      min="0"
+                      max="100"
+                      onChange={(e) =>
+                        field.onChange(parseFloat(e.target.value))
+                      }
+                      value={field.value || ""}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
         <div className="space-x-5">
           <Button type="submit" disabled={mutation.isPending}>
             {mutation.isPending ? (

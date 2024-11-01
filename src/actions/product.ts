@@ -2,19 +2,10 @@
 "use server";
 
 import { auth } from "@/auth";
+import { ProductFormData } from "@/components/admin/products/CreateNewProduct";
 import { db } from "@/lib/db";
 import { Product } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { NextRequest } from "next/server";
-
-interface ProductFormData {
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  categoryId: string;
-  images: string[];
-}
 
 export async function createProduct(data: ProductFormData): Promise<{
   success?: string;
@@ -55,6 +46,11 @@ export async function createProduct(data: ProductFormData): Promise<{
             url,
           })),
         },
+        isPromoted: data.isPromoted,
+        isFeatured: data.isFeatured,
+        promotionEnd: data.promotionEnd,
+        promotionStart: data.promotionStart,
+        discountPercent: data.discountPercent,
       },
       include: {
         images: true,
@@ -222,19 +218,19 @@ export async function getProducts(searchParams?: {
       let maxPrice: number | undefined;
 
       switch (price) {
-        case "0-50":
-          maxPrice = 50;
+        case "0-5000":
+          maxPrice = 5000;
           break;
-        case "51-100":
-          minPrice = 51;
-          maxPrice = 100;
+        case "5001-10000":
+          minPrice = 5001;
+          maxPrice = 10000;
           break;
-        case "101-200":
-          minPrice = 101;
-          maxPrice = 200;
+        case "10001-20000":
+          minPrice = 10001;
+          maxPrice = 20000;
           break;
-        case "201-plus":
-          minPrice = 201;
+        case "20001-plus":
+          minPrice = 20001;
           break;
         default:
           break;
@@ -304,4 +300,27 @@ export const getAllCategories = async () => {
   } catch (error) {
     throw new Error("Something Went wrong");
   }
+};
+
+export const getAllProducts = async () => {
+  return await db.product.findMany({
+    select: {
+      _count: {
+        select: {
+          orderItems: true,
+        },
+      },
+      category: true,
+      id: true,
+      name: true,
+      price: true,
+      description: true,
+      images: true,
+      discountPercent: true,
+      isFeatured: true,
+      isPromoted: true,
+      slug: true,
+      stock: true,
+    },
+  });
 };

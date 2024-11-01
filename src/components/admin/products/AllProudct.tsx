@@ -143,10 +143,10 @@ function AllProducts() {
               <SelectGroup>
                 <SelectLabel>Price Range</SelectLabel>
                 <SelectItem value="all">All Prices</SelectItem>
-                <SelectItem value="0-50">$0 - $50</SelectItem>
-                <SelectItem value="51-100">$51 - $100</SelectItem>
-                <SelectItem value="101-200">$101 - $200</SelectItem>
-                <SelectItem value="201-plus">$201+</SelectItem>
+                <SelectItem value="0-5000">0 - 5000</SelectItem>
+                <SelectItem value="5001-10000">5001 - 10000</SelectItem>
+                <SelectItem value="10001-20000">10001 - 20000</SelectItem>
+                <SelectItem value="20001-plus">20001+</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

@@ -28,20 +28,12 @@ import Link from "next/link";
 import { registerSchema } from "@/zod/schema";
 import { register } from "@/actions/register";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type LoginFormValues = z.infer<typeof registerSchema>;
 
-const loginUser = async (data: LoginFormValues) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  try {
-    await register(data);
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    } else {
-      throw new Error("An unknown error occurred");
-    }
-  }
+const RegisterUser = async (data: LoginFormValues) => {
+  await register(data);
 };
 
 function RegisterPage() {
@@ -49,12 +41,23 @@ function RegisterPage() {
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(registerSchema),
+    defaultValues: {
+      email: "",
+      name: "",
+      password: "",
+    },
   });
 
+  const router = useRouter();
+
   const loginMutation = useMutation({
-    mutationFn: loginUser,
+    mutationFn: RegisterUser,
     onSuccess: () => {
       toast("registration successfull");
+      toast("Redirecting to login page");
+      setTimeout(() => {
+        router.push("/auth/login");
+      }, 1000);
     },
     onError: (error: Error) => {
       setAuthError(error.message);
