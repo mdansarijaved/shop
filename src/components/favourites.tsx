@@ -1,138 +1,65 @@
 import * as React from "react";
-import {useRouter} from 'next/navigation'
 import Image from "next/image";
+import { db } from "@/lib/db";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "./ui/carousel";
+import Link from "next/link";
 
-export function Favourites() {
-
-  const router = useRouter();
-
-  const productsUp = [
-    {
-      name: "TV Stand",
-      category: "TV Stand",
-      icon: (
-        <Image
-          src="/tvstand/TVstand4.webp"
-          alt="Large Image"
-          width={500}
-          height={100}
-          className="object-cover h-full"
-        />
-      ),
-      link: "/products",
+export async function Favourites() {
+  const products = await db.product.findMany({
+    where: {
+      isFeatured: true,
     },
-    {
-      name: "Dinning Table",
-      category: "Dining Table",
-      icon: (
-        <Image
-          src="/dinningtable/dinningtable1.webp"
-          alt="Large Image"
-          width={500}
-          height={100}
-          className="object-cover h-full"
-        />
-      ),
-      link: "/products",
+    select: {
+      id: true,
+      name: true,
+      images: { select: { url: true } },
+      slug: true,
     },
-    {
-      name: "Sofa",
-      category: "Sofa",
-      icon: (
-        <Image
-          src="/Sofas/sofa4.webp"
-          alt="Large Image"
-          width={500}
-          height={100}
-          className="object-cover h-full"
-        />
-      ),
-      link: "/products",
-    },
-  ];
-  const productsDown = [
-    {
-      name: "wardrobe",
-      category: "Wardrobe",
-      icon: (
-        <Image
-          src="/cupboard/cupboard2.webp"
-          alt="Large Image"
-          width={500}
-          height={100}
-          className="object-cover h-full"
-        />
-      ),
-      link: "/products",
-    },
-    {
-      name: "Bed",
-      category: "Bed",
-      icon: (
-        <Image
-          src="/Bed/Bed2.webp"
-          alt="Large Image"
-          width={500}
-          height={100}
-          className="object-cover h-full"
-        />
-      ),
-      link: "/products",
-    },
-    {
-      name: "Temple",
-      category: "Temple",
-      icon: (
-        <Image
-          src="/temple/temple1.webp"
-          alt="Large Image"
-          width={500}
-          height={100}
-          className="object-cover h-full"
-        />
-      ),
-      link: "/products",
-    },
-  ];
-
-  const handleClick = (item) => {
-    router.push(`${item.link}?category=${item.category}`);
-  }
+    take: 6,
+  });
 
   return (
-    <>
+    <div>
       <h1 className="text-center text-2xl mt-10 font-bold font-sans underline underline-offset-8 tracking-tight">
         Cult Favourites
       </h1>
 
-      <div className="flex mx-auto w-[90%] sm:w-[80%] gap-4 mt-10 justify-between">
-        {productsUp.map((item) => (
-          <div
-            className=" cursor-pointer hover:scale-105 transition-all duration-300 text-center font-bold uppercase"
+      <div className="grid mx-auto w-[90%] sm:w-[80%] gap-4 mt-10 grid-cols-3 grid-rows-2">
+        {products.map((item) => (
+          <Link
+            href={`/products/${item.slug}`}
+            className=" cursor-pointer  transition-all duration-300 text-center font-bold uppercase"
             key={item.name}
-            onClick={() => handleClick(item)}
           >
-            <div className="h-[90%] hover:shadow-lg w-full">
-              {item.icon}
-            </div>
-            <p className="lg:text-xl mt-2 sm:tracking-wider text-[0.7rem] sm:text-[0.9rem]">{item.name}</p>
-          </div>
+            <Carousel>
+              <CarouselContent>
+                {item.images.map((url) => (
+                  <CarouselItem key={url.url}>
+                    <Image
+                      src={url.url}
+                      alt={url.url}
+                      width={500}
+                      height={100}
+                      className="object-cover w-full h-[200px] md:h-[400px] lg:h-[500px] xl:h-[600px]"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-2" />
+              <CarouselNext className="right-2" />
+            </Carousel>
+            <p className="lg:text-xl mt-2 sm:tracking-wider text-[0.7rem] sm:text-[0.9rem]">
+              {item.name}
+            </p>
+          </Link>
         ))}
       </div>
-      <div className="flex mx-auto w-[90%] sm:w-[80%] gap-4 mt-10 justify-between">
-        {productsDown.map((item) => (
-          <div
-            className=" cursor-pointer hover:scale-105 transition-all duration-300 text-center font-bold uppercase"
-            key={item.name}
-            onClick={() => handleClick(item)}
-          >
-            <div className="h-[90%] hover:shadow-lg w-full">
-              {item.icon}
-            </div>
-            <p className="lg:text-xl mt-2 sm:tracking-wider text-[0.7rem] sm:text-[0.9rem]">{item.name}</p>
-          </div>
-        ))}
-      </div>
-    </>
+    </div>
   );
 }
