@@ -65,8 +65,7 @@ async function ProductPage({ params }: { params: { productId: string } }) {
       <div className="grid md:grid-cols-2 gap-8">
         <div className="space-y-4">
           <div className="aspect-square relative overflow-hidden rounded-lg">
-            <Image
-              src={product.images[0].url}
+            <Image src={product.images[0].url}
               alt={product.name}
               layout="fill"
               objectFit="cover"
