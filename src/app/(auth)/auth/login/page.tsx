@@ -143,18 +143,12 @@ export default function LoginPage() {
               </span>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <Button
               variant="outline"
               onClick={() => console.log("Google login")}
             >
               <Icons.google className="mr-2 h-4 w-4" /> Google
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => console.log("GitHub login")}
-            >
-              <Icons.gitHub className="mr-2 h-4 w-4" /> GitHub
             </Button>
           </div>
         </CardContent>

@@ -1,17 +1,8 @@
 import RecentActivity from "@/components/admin/RecentActivity";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/lib/db";
-import { cn } from "@/lib/utils";
-import { IconMenuOrder, IconMoneybag } from "@tabler/icons-react";
-import {
-  BaggageClaim,
-  DollarSign,
-  List,
-  ListOrdered,
-  Plus,
-  User,
-} from "lucide-react";
+import { BaggageClaim, DollarSign, List, Plus, User } from "lucide-react";
 import Link from "next/link";
 
 import React from "react";
@@ -51,7 +42,7 @@ async function AdminDashboard() {
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <Card className="">
+              <Card className="rounded">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 ">
                   <CardTitle className=" font-medium">Total users</CardTitle>
                   <User />
@@ -60,7 +51,7 @@ async function AdminDashboard() {
                   <div className="text-2xl font-bold">{users}</div>
                 </CardContent>
               </Card>
-              <Card className="">
+              <Card className="rounded">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 ">
                   <CardTitle className=" font-medium">Revenue</CardTitle>
                   <DollarSign />
@@ -71,7 +62,7 @@ async function AdminDashboard() {
                   </div>
                 </CardContent>
               </Card>
-              <Card className="">
+              <Card className="rounded">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 ">
                   <CardTitle className=" font-medium">
                     {} Product count
@@ -82,7 +73,7 @@ async function AdminDashboard() {
                   <div className="text-2xl font-bold">{productsCount}</div>
                 </CardContent>
               </Card>
-              <Card className="">
+              <Card className="rounded">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 ">
                   <CardTitle className=" font-medium">{}Total Orders</CardTitle>
                   <BaggageClaim />

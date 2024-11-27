@@ -18,58 +18,9 @@ const TABS = {
 type TabValue = (typeof TABS)[keyof typeof TABS];
 
 export default function AddProductForm() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const currentTab = searchParams.get("tab") || "products";
-
-  // Convert URL-friendly tab parameter to display value
-  const getTabDisplay = useCallback((tab: string): TabValue => {
-    switch (tab) {
-      case "products":
-        return TABS.products;
-      case "lowStock":
-        return TABS.lowStock;
-      case "createProduct":
-        return TABS.createProduct;
-      case "createCategories":
-        return TABS.createCategories;
-      default:
-        return TABS.products;
-    }
-  }, []);
-
-  // Convert display value to URL-friendly parameter
-  const getTabParam = useCallback((tab: TabValue): string => {
-    switch (tab) {
-      case TABS.products:
-        return "products";
-      case TABS.lowStock:
-        return "lowStock";
-      case TABS.createProduct:
-        return "createProduct";
-      case TABS.createCategories:
-        return "createCategories";
-      default:
-        return "products";
-    }
-  }, []);
-
-  const handleTabChange = useCallback(
-    (value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("tab", getTabParam(value as TabValue));
-      router.push(`?${params.toString()}`, { scroll: false });
-    },
-    [router, searchParams, getTabParam]
-  );
-
   return (
     <div className="w-full p-2 md:p-5 xl:p-10">
-      <Tabs
-        defaultValue={getTabDisplay(currentTab)}
-        value={getTabDisplay(currentTab)}
-        onValueChange={handleTabChange}
-      >
+      <Tabs defaultValue={TABS.products}>
         <TabsList>
           <TabsTrigger value={TABS.products}>Products</TabsTrigger>
           <TabsTrigger value={TABS.lowStock}>Low in stock</TabsTrigger>

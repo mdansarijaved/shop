@@ -1,8 +1,7 @@
 "use client";
-import onUpload from "@/lib/image-upload";
 import Image from "next/image";
-import Link from "next/link";
-import React, { useCallback, useState } from "react";
+import { IKUpload, ImageKitProvider } from "imagekitio-next";
+import React, { useRef, useState } from "react";
 import {
   FormControl,
   FormField,
@@ -10,8 +9,11 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { useController, UseFormReturn } from "react-hook-form";
-import { Input } from "@/components/ui/input";
 import { ProductFormData } from "./CreateNewProduct";
+import { env } from "@/env";
+import { authenticator, onError, onSuccess } from "@/lib/ikUpload";
+const publicKey = env.NEXT_PUBLIC_IMAGEKIT_KEY;
+const urlEndPoint = env.NEXT_PUBLIC_IMGKIT_URL;
 
 function ImageUpload({
   form,
@@ -19,21 +21,87 @@ function ImageUpload({
   form: UseFormReturn<ProductFormData, any, undefined>;
 }) {
   const [isUploading, setIsUploading] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
   const { field: mediaField } = useController({
     name: "images",
     control: form.control,
   });
 
-  const handleFileUpload = useCallback(
+  const ikUploadRef = useRef(null);
+
+  return (
+    <ImageKitProvider
+      publicKey={publicKey}
+      urlEndpoint={urlEndPoint}
+      authenticator={authenticator}
+    >
+      <FormField
+        control={form.control}
+        name="images"
+        render={() => (
+          <FormItem>
+            <FormLabel>Media</FormLabel>
+            <FormControl>
+              <div
+                className={`border-2 border-dashed rounded-md p-4 text-center cursor-pointer   border-gray-300
+                }`}
+              >
+                <IKUpload
+                  fileName="test-upload.png"
+                  onError={onError}
+                  id="file-upload"
+                  className="hidden"
+                  onUploadProgress={() => setIsUploading(true)}
+                  onSuccess={onSuccess}
+                  useUniqueFileName={true}
+                  multiple
+                />
+
+                <label
+                  htmlFor="file-upload"
+                  className={`cursor-pointer ${isUploading ? "" : "hidden"} `}
+                >
+                  Uploading
+                </label>
+                <label
+                  htmlFor="file-upload"
+                  className={`cursor-pointer ${isUploading ? "hidden" : ""} `}
+                >
+                  select files to upload
+                </label>
+              </div>
+            </FormControl>
+            {mediaField.value.length > 0 && (
+              <div>
+                Uploaded files:
+                <ul className="flex justify-start items-center border p-2 rounded-md gap-4">
+                  {mediaField.value.map((url) => (
+                    <Image
+                      src={url}
+                      key={url}
+                      width={100}
+                      height={100}
+                      className="rounded-md object-center object-cover w-[100px] h-[100px]"
+                      alt="uploaded-image"
+                    />
+                  ))}
+                </ul>
+              </div>
+            )}
+          </FormItem>
+        )}
+      />
+    </ImageKitProvider>
+  );
+}
+
+export default ImageUpload;
+
+/**
+ * 
+ *  const handleFileUpload = useCallback(
     async (files: FileList) => {
       setIsUploading(true);
       try {
-        const uploadPromises = Array.from(files).map((file) => onUpload(file));
-        const uploadedUrls = await Promise.all(uploadPromises);
-        console.log(uploadedUrls);
-        mediaField.onChange([...mediaField.value, ...uploadedUrls]);
-        console.log(mediaField);
         setIsUploading(false);
       } catch (error) {
         console.error("Error uploading file:", error);
@@ -80,68 +148,4 @@ function ImageUpload({
     [handleFileUpload]
   );
   console.log(mediaField.value);
-  return (
-    <FormField
-      control={form.control}
-      name="images"
-      render={() => (
-        <FormItem>
-          <FormLabel>Media</FormLabel>
-          <FormControl>
-            <div
-              className={`border-2 border-dashed rounded-md p-4 text-center cursor-pointer ${
-                isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"
-              }`}
-              onDragEnter={handleDragIn}
-              onDragLeave={handleDragOut}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-            >
-              <Input
-                type="file"
-                onChange={handleFileChange}
-                multiple
-                className="hidden"
-                id="file-upload"
-              />
-
-              <label
-                htmlFor="file-upload"
-                className={`cursor-pointer ${isUploading ? "" : "hidden"} `}
-              >
-                Uploading
-              </label>
-              <label
-                htmlFor="file-upload"
-                className={`cursor-pointer ${isUploading ? "hidden" : ""} `}
-              >
-                {isDragging
-                  ? "Drop the files here"
-                  : "Drag & Drop files here or click to select"}
-              </label>
-            </div>
-          </FormControl>
-          {mediaField.value.length > 0 && (
-            <div>
-              Uploaded files:
-              <ul className="flex justify-start items-center border p-2 rounded-md gap-4">
-                {mediaField.value.map((url) => (
-                  <Image
-                    src={url}
-                    key={url}
-                    width={100}
-                    height={100}
-                    className="rounded-md object-center object-cover w-[100px] h-[100px]"
-                    alt="uploaded-image"
-                  />
-                ))}
-              </ul>
-            </div>
-          )}
-        </FormItem>
-      )}
-    />
-  );
-}
-
-export default ImageUpload;
+ */
