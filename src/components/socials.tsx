@@ -34,9 +34,9 @@ export default function Socials() {
     <div className="w-[80%] mx-auto">
       <div className=" flex justify-between border-y py-6">
         <div className="md:flex gap-8 place-content-center place-items-center hidden">
-          {contact.map((item) => (
+          {contact.map((item, id) => (
             <div
-              key={item.link}
+              key={id}
               className="flex gap-3 place-items-center cursor-pointer"
             >
               <span className="text-black border-2 rounded-full p-2 border-black/40">
@@ -50,9 +50,9 @@ export default function Socials() {
           ))}
         </div>
         <div className="flex place-items-center">
-          {icons.map((icon) => (
+          {icons.map((icon, id) => (
             <span
-              key={icon.key}
+              key={id}
               className="hover:bg-[#f5f5f5] p-4 rounded-full cursor-pointer"
             >
               {icon}

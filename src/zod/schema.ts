@@ -16,8 +16,8 @@ export const costPerFootSchema = z.object({
 });
 
 const ProductOption = z.object({
-  type: z.string(),
-  value: z.string(),
+  type: z.string().min(1, "value required"),
+  value: z.string().min(1, "value is required"),
 });
 
 const featuresSchema = z.object({
@@ -41,6 +41,6 @@ export const productSchema = z.object({
   isPromoted: z.boolean().default(false),
   promotionStart: z.date().nullable(),
   promotionEnd: z.date().nullable(),
-  discountPercent: z.number().min(0).max(100).nullable(),
-  options: z.array(ProductOption).optional(),
+  discountPrice: z.number().min(0).nullable(),
+  options: z.array(ProductOption),
 });

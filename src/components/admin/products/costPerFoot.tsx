@@ -10,67 +10,93 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
 
 export const CostPerFootInput = () => {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext<ProductFormData>();
+  const form = useFormContext<ProductFormData>();
   const { fields, append, remove } = useFieldArray({
+    control: form.control,
     name: "costPerFoot",
   });
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <label className="block text-sm font-medium text-gray-700">
-          Cost Per Foot
-        </label>
-        <button
+        <FormLabel className="text-base">Cost Per Foot</FormLabel>
+        <Button
           type="button"
+          variant="outline"
+          size="sm"
           onClick={() => append({ typeof: MaterialType.MDF, cost: 0 })}
-          className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
         >
-          <Plus className="h-4 w-4 mr-1" />
+          <Plus className="h-4 w-4 mr-2" />
           Add Cost
-        </button>
+        </Button>
       </div>
 
       {fields.map((field, index) => (
         <div key={field.id} className="flex gap-4 items-start">
-          <div className="flex-1">
-            <Select {...register(`costPerFoot.${index}.typeof`)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select type" />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.values(MaterialType).map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {type}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <FormField
+            control={form.control}
+            name={`costPerFoot.${index}.typeof`}
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.values(MaterialType).map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-          <div className="flex-1">
-            <Input
-              type="number"
-              {...register(`costPerFoot.${index}.cost`, {
-                valueAsNumber: true,
-              })}
-              className="h-full py-2 block w-full rounded-md "
-              placeholder="Cost"
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name={`costPerFoot.${index}.cost`}
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormControl>
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                    placeholder="Cost"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="icon"
             onClick={() => remove(index)}
-            className="mt-1 p-2 text-red-600 hover:text-red-800"
+            className="mt-1 text-destructive hover:text-destructive/90"
           >
-            <Trash2 className="h-5 w-5" />
-          </button>
+            <Trash2 className="h-4 w-4" />
+          </Button>
         </div>
       ))}
     </div>

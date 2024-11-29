@@ -17,8 +17,12 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ProductGallery({
   images,
+  isFeatured,
+  isPromoted,
 }: {
   images: { url: string }[];
+  isFeatured: boolean;
+  isPromoted: boolean;
 }) {
   const [isZoomed, setIsZoomed] = React.useState(false);
   const [zoomPosition, setZoomPosition] = React.useState({ x: 0, y: 0 });
@@ -43,7 +47,7 @@ export default function ProductGallery({
   };
 
   return (
-    <div className="flex flex-col gap-4 max-w-4xl mx-auto p-4">
+    <div className="flex flex-col gap-4 max-w-2xl mx-auto ">
       <div className="relative">
         <Carousel setApi={setApi}>
           <CarouselContent>
@@ -72,6 +76,20 @@ export default function ProductGallery({
                         : undefined
                     }
                   >
+                    <div className="absolute flex gap-2 z-50 left-4 top-2 w-full">
+                      {isFeatured && (
+                        <div className="gradient-button p-[1px] h-full flex items-center justify-center rounded-md">
+                          <span className=" rounded bg-white px-2 py-1 text-xs ">
+                            Bestseller
+                          </span>
+                        </div>
+                      )}
+                      {isPromoted && (
+                        <span className=" flex justify-center items-center bg-white rounded-md px-4   py-1 text-xs ">
+                          Sale
+                        </span>
+                      )}
+                    </div>
                     <Image
                       src={image.url}
                       alt={image.url}

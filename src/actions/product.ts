@@ -4,22 +4,26 @@
 import { auth } from "@/auth";
 import { ProductFormData } from "@/components/admin/products/CreateNewProduct";
 import { db } from "@/lib/db";
+import { generateSlug } from "@/lib/slug";
 import { Product } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 export async function createProduct(data: ProductFormData): Promise<{
-  success?: string;
-  error?: string;
+  status: "success" | "error" | "unauthorized";
+  message: string;
   product?: Product;
 }> {
   try {
     const session = await auth();
 
     if (!session || !session.user || session.user.role !== "ADMIN") {
-      return { error: "Unauthorized. Only admins can create products." };
+      return {
+        status: "unauthorized",
+        message: "Unauthorized. Only admins can create products.",
+      };
     }
 
     if (!data.name || !data.description || !data.price || !data.category) {
-      return { error: "Missing required fields" };
+      return { status: "error", message: "Missing required fields" };
     }
 
     const slug = generateSlug(data.name);
@@ -29,7 +33,10 @@ export async function createProduct(data: ProductFormData): Promise<{
     });
 
     if (existingProduct) {
-      return { error: "A product with similar name already exists" };
+      return {
+        status: "error",
+        message: "A product with a similar name already exists",
+      };
     }
 
     const product = await db.product.create({
@@ -40,7 +47,18 @@ export async function createProduct(data: ProductFormData): Promise<{
         stock: parseInt(data.stock.toString()),
         slug,
         category: data.category,
-
+        features: {
+          create: data.features.map((feature) => ({
+            feature: feature.feature,
+            featureType: feature.featureType,
+          })),
+        },
+        options: {
+          create: data.options?.map((option) => ({
+            type: option.type,
+            value: option.value,
+          })),
+        },
         costPerFoot: {
           create: data.costPerFoot.map((cost) => ({
             typeof: cost.typeof,
@@ -56,7 +74,7 @@ export async function createProduct(data: ProductFormData): Promise<{
         isFeatured: data.isFeatured,
         promotionEnd: data.promotionEnd,
         promotionStart: data.promotionStart,
-        discountPercent: data.discountPercent,
+        discountPrice: data.discountPrice,
       },
       include: {
         images: true,
@@ -64,23 +82,53 @@ export async function createProduct(data: ProductFormData): Promise<{
       },
     });
 
-    // revalidatePath("/admin/products");
-
-    return { success: "Product created successfully", product };
+    return {
+      status: "success",
+      message: "Product created successfully",
+      product,
+    };
   } catch (error) {
     console.error("PRODUCT_CREATE_ERROR", error);
-    return { error: "Something went wrong while creating the product" };
+    return {
+      status: "error",
+      message: "Something went wrong while creating the product",
+    };
   }
 }
 
+export const getProductById = async (id: string) => {
+  try {
+    console.log(id);
+    const product = await db.product.findFirst({
+      where: {
+        slug: id,
+      },
+      select: {
+        name: true,
+        description: true,
+        images: true,
+        price: true,
+        discountPrice: true,
+        options: true,
+        features: true,
+        category: true,
+        costPerFoot: true,
+        isFeatured: true,
+        isPromoted: true,
+        promotionEnd: true,
+        promotionStart: true,
+        stock: true,
+        visible: true,
+      },
+    });
+    return product;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // Helper function to generate slug from product name
-function generateSlug(name: string): string {
-  const timestamp = new Date().getTime().toString().slice(-4);
-  return `${name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)+/g, "")}-${timestamp}`;
-}
+
 // // Helper function to delete product
 // export async function deleteProduct(productId: string) {
 //   try {

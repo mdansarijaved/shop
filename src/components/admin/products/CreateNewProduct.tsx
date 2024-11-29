@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toast } from "@/hooks/use-toast";
+
 import { createProduct } from "@/actions/product";
 import ImageUpload from "./imageUpload";
 import { Switch } from "@/components/ui/switch";
@@ -41,9 +41,11 @@ import { Category } from "@/enums";
 import { CostPerFootInput } from "./costPerFoot";
 import { Options } from "./options";
 import { CreateFeatures } from "./features";
+import { useToast } from "@/hooks/use-toast";
 
 export type ProductFormData = z.infer<typeof productSchema>;
 function CreateNewProduct() {
+  const { toast } = useToast();
   const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -52,7 +54,7 @@ function CreateNewProduct() {
       price: 0,
       stock: 0,
       images: [],
-      discountPercent: null,
+      discountPrice: null,
       isFeatured: false,
       isPromoted: false,
       promotionStart: null,
@@ -61,19 +63,21 @@ function CreateNewProduct() {
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: ProductFormData) => {
-      const response = await createProduct(data);
-      if (!response.success) {
-        throw new Error(response.error);
+    mutationFn: createProduct,
+    onSuccess: (data) => {
+      if (data.status === "success") {
+        toast({
+          title: "Product added successfully",
+          description: data.message,
+        });
+        form.reset();
+      } else {
+        toast({
+          title: data.status,
+          description: data.message,
+          variant: "destructive",
+        });
       }
-      return response.product;
-    },
-    onSuccess: () => {
-      toast({
-        title: "Product added successfully",
-        description: "Your new product has been created.",
-      });
-      form.reset();
     },
     onError: (error: Error) => {
       toast({
@@ -85,7 +89,6 @@ function CreateNewProduct() {
   });
 
   const onSubmit = async (data: ProductFormData) => {
-    console.log(data);
     mutation.mutate(data);
   };
 
@@ -315,15 +318,14 @@ function CreateNewProduct() {
 
             <FormField
               control={form.control}
-              name="discountPercent"
+              name="discountPrice"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Discount Percentage</FormLabel>
+                  <FormLabel>Discount Price</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       min="0"
-                      max="100"
                       onChange={(e) =>
                         field.onChange(parseFloat(e.target.value))
                       }

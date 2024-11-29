@@ -27,7 +27,7 @@ type Product = {
   slug: string;
   isFeatured: boolean;
   isPromoted: boolean;
-  discountPercent: number | null;
+  discountPrice: number | null;
   images: {
     url: string;
   }[];
@@ -68,10 +68,8 @@ export default function ProductList({ product }: { product: Product }) {
             <Badge variant={product.isPromoted ? "default" : "secondary"}>
               ₹{product.price.toFixed(2)}
             </Badge>
-            {product.discountPercent && (
-              <Badge variant="destructive">
-                {product.discountPercent}% OFF
-              </Badge>
+            {product.discountPrice && (
+              <Badge variant="destructive">{product.discountPrice}% OFF</Badge>
             )}
           </div>
         </div>

@@ -40,7 +40,6 @@ model Product {
     stock          Int
     slug           String
     category       Category
-    colors         Colors[]
     features       Features[]
     price          Float
     costPerFoot    CostPerFoot[]
@@ -49,6 +48,7 @@ model Product {
     promotionStart DateTime?
     promotionEnd   DateTime?
     discountPrice  Float?
+    visible        Boolean         @default(true)
     images         Image[]
     orderItems     OrderItem[]
     createdAt      DateTime        @default(now())
@@ -60,16 +60,9 @@ model Product {
 model ProductOption {
     id        String   @id @default(cuid())
     type      String
-    value     Int
+    value     String
     Product   Product? @relation(fields: [productId], references: [id])
     productId String?
-}
-
-model Colors {
-    id        String  @id @default(cuid())
-    color     String
-    productId String
-    product   Product @relation(fields: [productId], references: [id])
 }
 
 model Features {
