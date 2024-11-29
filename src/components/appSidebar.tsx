@@ -1,4 +1,12 @@
-import { Home, ReceiptText, ShoppingCart, Store, UserPen } from "lucide-react";
+"use client";
+import {
+  Home,
+  Plus,
+  ReceiptText,
+  ShoppingCart,
+  Store,
+  UserPen,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -11,6 +19,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 const items = [
   {
@@ -22,6 +31,11 @@ const items = [
     title: "Products",
     url: "/dashboard/products",
     icon: ShoppingCart,
+  },
+  {
+    title: "Add Products",
+    url: "/dashboard/addproducts",
+    icon: Plus,
   },
   {
     title: "Orders",
@@ -41,6 +55,8 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const pathname = usePathname();
+  console.log(pathname);
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
@@ -51,7 +67,12 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link href={item.url}>
+                    <Link
+                      href={item.url}
+                      className={`${
+                        pathname === item.url ? "bg-gray-200" : ""
+                      }`}
+                    >
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>

@@ -25,12 +25,12 @@ export async function Favourites() {
   });
 
   return (
-    <div>
+    <div className="w-full ">
       <h1 className="text-center text-2xl mt-10 font-bold font-sans underline underline-offset-8 tracking-tight">
         Cult Favourites
       </h1>
 
-      <div className="grid mx-auto w-[90%] sm:w-[80%] gap-4 mt-10 grid-cols-3 grid-rows-2">
+      <div className="grid mx-auto w-[90%] sm:w-[80%] gap-4 mt-10 grid-cols-3 auto-rows-auto">
         {products.map((item) => (
           <Link
             href={`/products/${item.slug}`}

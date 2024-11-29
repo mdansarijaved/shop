@@ -11,7 +11,7 @@ import Image from "next/image";
 import { auth, signOut } from "@/auth";
 import { Button, buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
-export async function FloatingNavDemo() {
+export async function Navbar() {
   const user = await auth();
   const navItemsLeft = [
     {

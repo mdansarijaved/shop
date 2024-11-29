@@ -1,0 +1,27 @@
+export enum Category {
+  KITCHEN = "KITCHEN",
+  WARDROBE = "WARDROBE",
+  SHOERACK = "SHOERACK",
+  PARTITION = "PARTITION",
+  DRESSER = "DRESSER",
+  WALLDESIGN = "WALLDESIGN",
+  INTERIOR = "INTERIOR",
+  DOORS = "DOORS",
+  EXTERIOR = "EXTERIOR",
+  HOMEDECOR = "HOMEDECOR",
+}
+
+export enum MaterialType {
+  MDF = "MDF",
+  HDMR = "HDMR",
+  TEAKWOOD = "TEAKWOOD",
+  FLUSH = "FLUSH",
+}
+
+export enum FeatureType {
+  QUALITY = "QUALITY",
+  MATERIAL = "MATERIAL",
+  COLOR = "COLOR",
+  DIMENSION = "DIMENSION",
+  FEATURES = "FEATURES",
+}

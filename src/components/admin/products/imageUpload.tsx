@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { IKUpload, ImageKitProvider } from "imagekitio-next";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import {
   FormControl,
   FormField,
@@ -11,7 +11,11 @@ import {
 import { useController, UseFormReturn } from "react-hook-form";
 import { ProductFormData } from "./CreateNewProduct";
 import { env } from "@/env";
-import { authenticator, onError, onSuccess } from "@/lib/ikUpload";
+import { authenticator } from "@/lib/ikUpload";
+import {
+  IKUploadResponse,
+  UploadError,
+} from "imagekitio-next/dist/types/components/IKUpload/props";
 const publicKey = env.NEXT_PUBLIC_IMAGEKIT_KEY;
 const urlEndPoint = env.NEXT_PUBLIC_IMGKIT_URL;
 
@@ -27,7 +31,17 @@ function ImageUpload({
   });
 
   const ikUploadRef = useRef(null);
+  const onError = (err: UploadError) => {
+    console.log("Error", err.message);
+  };
 
+  const onSuccess = useCallback(
+    async (res: IKUploadResponse) => {
+      const url = res.url;
+      mediaField.onChange([...mediaField.value, url]);
+    },
+    [mediaField]
+  );
   return (
     <ImageKitProvider
       publicKey={publicKey}
@@ -53,7 +67,7 @@ function ImageUpload({
                   onUploadProgress={() => setIsUploading(true)}
                   onSuccess={onSuccess}
                   useUniqueFileName={true}
-                  multiple
+                  ref={ikUploadRef}
                 />
 
                 <label

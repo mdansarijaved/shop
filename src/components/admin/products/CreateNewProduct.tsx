@@ -26,7 +26,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import { fetchCategories } from "@/actions/categories";
 import { createProduct } from "@/actions/product";
 import ImageUpload from "./imageUpload";
 import { Switch } from "@/components/ui/switch";
@@ -37,23 +36,13 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-
-const productSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
-  price: z.number().positive("Price must be positive"),
-  stock: z.number().int().nonnegative("Stock must be non-negative"),
-  categoryId: z.string().min(1, "Category is required"),
-  images: z.string().array(),
-  isFeatured: z.boolean().default(false),
-  isPromoted: z.boolean().default(false),
-  promotionStart: z.date().nullable(),
-  promotionEnd: z.date().nullable(),
-  discountPercent: z.number().min(0).max(100).nullable(),
-});
+import { productSchema } from "@/zod/schema";
+import { Category } from "@/enums";
+import { CostPerFootInput } from "./costPerFoot";
+import { Options } from "./options";
+import { CreateFeatures } from "./features";
 
 export type ProductFormData = z.infer<typeof productSchema>;
-
 function CreateNewProduct() {
   const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
@@ -62,7 +51,6 @@ function CreateNewProduct() {
       description: "",
       price: 0,
       stock: 0,
-      categoryId: "",
       images: [],
       discountPercent: null,
       isFeatured: false,
@@ -70,11 +58,6 @@ function CreateNewProduct() {
       promotionStart: null,
       promotionEnd: null,
     },
-  });
-
-  const { data: categories, isLoading: isCategoriesLoading } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => fetchCategories(),
   });
 
   const mutation = useMutation({
@@ -102,6 +85,7 @@ function CreateNewProduct() {
   });
 
   const onSubmit = async (data: ProductFormData) => {
+    console.log(data);
     mutation.mutate(data);
   };
 
@@ -178,7 +162,7 @@ function CreateNewProduct() {
 
         <FormField
           control={form.control}
-          name="categoryId"
+          name="category"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Category</FormLabel>
@@ -189,24 +173,20 @@ function CreateNewProduct() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {isCategoriesLoading ? (
-                    <SelectItem value="something">
-                      Loading categories...
+                  {Object.values(Category).map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
                     </SelectItem>
-                  ) : (
-                    categories?.map((category) => (
-                      <SelectItem key={category.id} value={category.id}>
-                        {category.name}
-                      </SelectItem>
-                    ))
-                  )}
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
             </FormItem>
           )}
         />
-
+        <CostPerFootInput />
+        <CreateFeatures />
+        <Options />
         <ImageUpload form={form} />
         <div className="grid grid-cols-2 gap-4">
           <FormField

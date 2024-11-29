@@ -33,7 +33,7 @@ async function AdminDashboard() {
 
               <div className="flex justify-center items-center gap-5">
                 <Link
-                  href={"/dashboard/products"}
+                  href={"/dashboard/addproducts"}
                   className={buttonVariants({ variant: "outline" })}
                 >
                   Add products <Plus />{" "}

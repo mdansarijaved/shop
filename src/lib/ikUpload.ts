@@ -1,8 +1,3 @@
-import {
-  IKUploadResponse,
-  UploadError,
-} from "imagekitio-next/dist/types/components/IKUpload/props";
-
 const authenticator = async () => {
   try {
     const response = await fetch("http://localhost:3000/api/auth");
@@ -23,12 +18,5 @@ const authenticator = async () => {
     throw new Error("something is wrong");
   }
 };
-const onError = (err: UploadError) => {
-  console.log("Error", err.message);
-};
 
-const onSuccess = (res: IKUploadResponse) => {
-  console.log("Success", res);
-};
-
-export { authenticator, onError, onSuccess };
+export { authenticator };
