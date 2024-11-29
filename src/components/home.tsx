@@ -9,10 +9,11 @@ function HomeComponent() {
   return (
     <div>
       <Hero />
-      <Favourites />
-      <Filler />
-      <BestSeller />
-      <Footer />
+      <div className="px-5 md:px-10 lg:px-16 xl:px-20 space-y-20">
+        <Favourites />
+        <Filler />
+        <BestSeller />
+      </div>
     </div>
   );
 }

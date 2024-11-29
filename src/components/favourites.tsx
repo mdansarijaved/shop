@@ -25,41 +25,68 @@ export async function Favourites() {
   });
 
   return (
-    <div className="w-full ">
-      <h1 className="text-center text-2xl mt-10 font-bold font-sans underline underline-offset-8 tracking-tight">
-        Cult Favourites
-      </h1>
-
-      <div className="grid mx-auto w-[90%] sm:w-[80%] gap-4 mt-10 grid-cols-3 auto-rows-auto">
-        {products.map((item) => (
-          <Link
-            href={`/products/${item.slug}`}
-            className=" cursor-pointer  transition-all duration-300 text-center font-bold uppercase"
-            key={item.name}
-          >
-            <Carousel>
-              <CarouselContent>
-                {item.images.map((url) => (
-                  <CarouselItem key={url.url}>
-                    <Image
-                      src={url.url}
-                      alt={url.url}
-                      width={500}
-                      height={100}
-                      className="object-cover w-full h-[200px] md:h-[400px] lg:h-[500px] xl:h-[600px]"
-                    />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-2" />
-              <CarouselNext className="right-2" />
-            </Carousel>
-            <p className="lg:text-xl mt-2 sm:tracking-wider text-[0.7rem] sm:text-[0.9rem]">
-              {item.name}
-            </p>
-          </Link>
-        ))}
+    <div className="w-full max-w-[1920px] mx-auto px-6 py-12">
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h2 className="text-3xl font-semibold text-gray-900">
+            Collection in focus
+          </h2>
+          <p className="text-sm text-gray-600 mt-1">All our favourites</p>
+        </div>
       </div>
+
+      <Carousel
+        opts={{
+          align: "start",
+          slidesToScroll: 3,
+          containScroll: "trimSnaps",
+        }}
+        className="w-full"
+      >
+        <CarouselContent className="-ml-4">
+          {products.map((item) => (
+            <CarouselItem
+              key={item.name}
+              className="pl-4 basis-full md:basis-1/2 lg:basis-1/3"
+            >
+              <Link
+                href={`/products/${item.slug}`}
+                className="block cursor-pointer transition-all duration-300 group h-full"
+              >
+                <div className="relative w-full h-[400px] overflow-hidden rounded-lg ">
+                  <Carousel className="w-full h-full">
+                    <CarouselContent className="h-full">
+                      {item.images.map((url) => (
+                        <CarouselItem key={url.url} className="h-full w-full">
+                          <Image
+                            src={url.url}
+                            alt={item.name}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                            priority
+                          />
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="left-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <CarouselNext className="right-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </Carousel>
+                </div>
+                <div className="mt-4">
+                  <h3 className="text-lg font-medium text-gray-900 line-clamp-2">
+                    {item.name}
+                  </h3>
+                </div>
+              </Link>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <div className="flex justify-end gap-2 mt-4">
+          <CarouselPrevious className="position-static" />
+          <CarouselNext className="position-static" />
+        </div>
+      </Carousel>
     </div>
   );
 }

@@ -76,7 +76,7 @@ export function BestSeller() {
         opts={{
           align: "start",
         }}
-        className="w-[70%] sm:w-[80%] mx-auto my-6 border-2 sm:border-0 border-black/20"
+        className=" mx-auto my-6 border-2 sm:border-0 border-black/20"
       >
         <CarouselContent>
           {products.map((product, index) => (
@@ -84,7 +84,7 @@ export function BestSeller() {
               <div className=" m-1 group relative cursor-pointer ">
                 <Card>
                   <CardContent className="flex bg-[#ecedeb] p-0">
-                    <div className=" group-hover:opacity-50 h-auto w-full" >
+                    <div className=" group-hover:opacity-50 h-auto w-full">
                       {product.icon}
                     </div>
                     <span className="hidden rounded-full border-2 p-4 border-blue-900/30 cursor-pointer group-hover:block absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 group-hover:animate-pulse">

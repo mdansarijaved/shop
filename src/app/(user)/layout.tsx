@@ -1,5 +1,7 @@
+import Banner from "@/components/banner";
+import Footer from "@/components/footer";
 import { Navbar } from "@/components/navbar";
-import Socials from "@/components/socials";
+
 import React from "react";
 
 function UserLayout({
@@ -9,10 +11,10 @@ function UserLayout({
 }>) {
   return (
     <div>
-      {/* <Banner /> */}
       <Navbar />
+      <Banner />
       {children}
-      <Socials />
+      <Footer />
     </div>
   );
 }

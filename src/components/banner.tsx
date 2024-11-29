@@ -1,27 +1,39 @@
-import { CalendarRange, Truck } from "lucide-react";
+import Link from "next/link";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 
-export default function Banner() {
-  const bannerLeft = [
-    {
-      icon: <Truck className="text-white size-5" />,
-      title: <h1 className="text-sm font-semibold">Free Shipping</h1>,
-    },
-    {
-      icon: <CalendarRange className="text-white size-5" />,
-      title: <h1 className="text-sm font-semibold">EMI Options</h1>,
-    },
-  ];
+const categories = [
+  "KITCHEN",
+  "WARDROBE",
+  "SHOERACK",
+  "PARTITION",
+  "DRESSER",
+  "WALLDESIGN",
+  "INTERIOR",
+  "DOORS",
+  "EXTERIOR",
+  "HOMEDECOR",
+];
+
+export default function Categories() {
   return (
-    <div className="bg-black h-10 items-center flex justify-between place-content-center px-2 md:px-16">
-      <div className="text-white hidden md:flex md:gap-6 gap-4">
-        {bannerLeft.map((item, index) => (
-          <div className="flex md:gap-2 gap-1" key={index}>
-            {item.icon}
-            {item.title}
-          </div>
-        ))}
+    <nav className="bg-gray-100 py-2 px-4 md:px-16 sticky top-0 left-0 w-full z-50">
+      <div className="w-full flex justify-center">
+        <ScrollArea className="w-[100vw] ">
+          <ul className={`flex justify-center space-x-4 lg:space-x-8`}>
+            {categories.map((category) => (
+              <li key={category}>
+                <Link
+                  href={`/category/${category.toLowerCase()}`}
+                  className="text-sm font-light text-gray-600 hover:text-blue-600 hover:underline"
+                >
+                  {category.charAt(0) + category.slice(1).toLowerCase()}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
-      <h1 className="text-white mx-auto md:mx-0 text-sm font-semibold">Help?</h1>
-    </div>
+    </nav>
   );
 }

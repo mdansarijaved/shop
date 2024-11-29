@@ -34,27 +34,28 @@ enum FeatureType {
 }
 
 model Product {
-    id             String          @id @default(cuid())
-    name           String
-    description    String
-    stock          Int
-    slug           String
-    category       Category
-    features       Features[]
-    price          Float
-    costPerFoot    CostPerFoot[]
-    isFeatured     Boolean         @default(false)
-    isPromoted     Boolean         @default(false)
-    promotionStart DateTime?
-    promotionEnd   DateTime?
-    discountPrice  Float?
-    visible        Boolean         @default(true)
-    images         Image[]
-    orderItems     OrderItem[]
-    createdAt      DateTime        @default(now())
-    updatedAt      DateTime        @updatedAt
-    review         Review[]
-    options        ProductOption[]
+    id              String          @id @default(cuid())
+    name            String
+    description     String
+    stock           Int
+    slug            String
+    category        Category
+    features        Features[]
+    price           Float
+    costPerFoot     CostPerFoot[]
+    isFeatured      Boolean         @default(false)
+    isPromoted      Boolean         @default(false)
+    promotionStart  DateTime?
+    promotionEnd    DateTime?
+    variablePricing Boolean         @default(true)
+    discountPrice   Float?
+    visible         Boolean         @default(true)
+    images          Image[]
+    orderItems      OrderItem[]
+    createdAt       DateTime        @default(now())
+    updatedAt       DateTime        @updatedAt
+    review          Review[]
+    options         ProductOption[]
 }
 
 model ProductOption {

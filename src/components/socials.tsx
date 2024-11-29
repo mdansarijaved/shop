@@ -31,7 +31,7 @@ export default function Socials() {
     <InstagramLogoIcon key="instagram" className="lg:size-8 size-5" />,
   ];
   return (
-    <div className="w-[80%] mx-auto">
+    <div className="px-10 mx-auto">
       <div className=" flex justify-between border-y py-6">
         <div className="md:flex gap-8 place-content-center place-items-center hidden">
           {contact.map((item, id) => (

@@ -72,13 +72,7 @@ function ImageUpload({
 
                 <label
                   htmlFor="file-upload"
-                  className={`cursor-pointer ${isUploading ? "" : "hidden"} `}
-                >
-                  Uploading
-                </label>
-                <label
-                  htmlFor="file-upload"
-                  className={`cursor-pointer ${isUploading ? "hidden" : ""} `}
+                  className={`cursor-pointer ${isUploading ? "" : ""} `}
                 >
                   select files to upload
                 </label>

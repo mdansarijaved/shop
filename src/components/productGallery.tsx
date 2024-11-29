@@ -49,8 +49,22 @@ export default function ProductGallery({
   return (
     <div className="flex flex-col gap-4 max-w-2xl mx-auto ">
       <div className="relative">
+        <div className="absolute flex gap-2 z-10 left-4 top-2 w-full">
+          {isFeatured && (
+            <div className="gradient-button p-[1px] h-full flex items-center justify-center rounded-md">
+              <span className=" rounded bg-white px-2 py-1 text-xs ">
+                Bestseller
+              </span>
+            </div>
+          )}
+          {isPromoted && (
+            <span className=" flex justify-center items-center bg-white rounded-md px-4   py-1 text-xs ">
+              Sale
+            </span>
+          )}
+        </div>
         <Carousel setApi={setApi}>
-          <CarouselContent>
+          <CarouselContent className="">
             {images.map((image, index) => (
               <CarouselItem key={index}>
                 <div
@@ -65,7 +79,7 @@ export default function ProductGallery({
                 >
                   <div
                     className={cn(
-                      "relative w-full h-full transition-transform duration-200 ease-out",
+                      " w-full h-full transition-transform duration-200 ease-out",
                       isZoomed && "scale-150"
                     )}
                     style={
@@ -76,20 +90,6 @@ export default function ProductGallery({
                         : undefined
                     }
                   >
-                    <div className="absolute flex gap-2 z-50 left-4 top-2 w-full">
-                      {isFeatured && (
-                        <div className="gradient-button p-[1px] h-full flex items-center justify-center rounded-md">
-                          <span className=" rounded bg-white px-2 py-1 text-xs ">
-                            Bestseller
-                          </span>
-                        </div>
-                      )}
-                      {isPromoted && (
-                        <span className=" flex justify-center items-center bg-white rounded-md px-4   py-1 text-xs ">
-                          Sale
-                        </span>
-                      )}
-                    </div>
                     <Image
                       src={image.url}
                       alt={image.url}

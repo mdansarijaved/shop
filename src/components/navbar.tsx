@@ -15,6 +15,7 @@ export async function Navbar() {
   const user = await auth();
   const navItemsLeft = [
     {
+      name: "home",
       link: "/",
       icon: (
         <Image
@@ -24,27 +25,6 @@ export async function Navbar() {
           height={500}
           className="h-[60px] w-[100px]"
         />
-      ),
-    },
-    {
-      name: "Living Room",
-      link: "/",
-      icon: (
-        <HomeIcon className="lg:h-4 lg:w-4 lg:border-none lg:rounded-none lg:p-0  border-2 rounded-full p-1 w-8 h-8 hover:border-black/40" />
-      ),
-    },
-    {
-      name: "Dining Room",
-      link: "/auth/login",
-      icon: (
-        <Utensils className="lg:h-4 lg:w-4 lg:border-none lg:rounded-none lg:p-0  border-2 rounded-full p-1 w-8 h-8 hover:border-black/40" />
-      ),
-    },
-    {
-      name: "Bedroom",
-      link: "/auth/register",
-      icon: (
-        <BedSingle className="lg:h-4 lg:w-4 lg:border-none lg:rounded-none lg:p-0  border-2 rounded-full p-1 w-8 h-8 hover:border-black/40" />
       ),
     },
   ];
@@ -63,8 +43,8 @@ export async function Navbar() {
     },
   ];
   return (
-    <div className=" flex z-50 place-items-center justify-between shadow-lg bg-[#fefefe]">
-      <div className="w-fit px-3 md:px-5 lg:px-7 xl:px-10 py-1 bg-[#fefefe] dark:bg-black  md:flex justify-center rounded-xl items-center gap-4 md:gap-5 lg:gap-7 xl:gap-10 hidden">
+    <div className=" flex z-50 place-items-center justify-between shadow-lg bg-[#fefefe] px-3 md:px-5 lg:px-7 xl:px-10">
+      <div className="">
         {navItemsLeft.map((nav, index) => (
           <Link
             href={nav.link}
@@ -72,16 +52,14 @@ export async function Navbar() {
             className="flex justify-center items-center gap-2 "
           >
             {nav.icon}
-            {""}
-            <div className="xl:block hidden">{nav.name}</div>
           </Link>
         ))}
       </div>
-      <div className="w-fit px-3 md:px-5 lg:px-7 xl:px-10 py-3 bg-[#fefefe] dark:bg-black  flex justify-center rounded-xl items-center gap-4 md:gap-5 lg:gap-7 xl:gap-6 mx-auto md:mx-0">
+      <div className=" py-3 bg-[#fefefe] dark:bg-black  flex justify-center rounded-xl items-center gap-4 md:gap-5 lg:gap-7 xl:gap-6 mx-auto md:mx-0">
         <form action="" className=" xl:w-96 ">
           <input
             type="text"
-            className="w-full bg-[#ecedeb]  px-4 py-2 placeholder:text-[#757575] outline-none"
+            className="w-full bg-gray-100  px-4 py-2 rounded-md placeholder:text-[#757575] outline-none"
             placeholder="Search for Products..."
           />
         </form>
