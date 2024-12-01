@@ -1,123 +1,125 @@
 enum Category {
-    KITCHEN
-    WARDROBE
-    SHOERACK
-    PARTITION
-    DRESSER
-    WALLDESIGN
-    INTERIOR
-    DOORS
-    EXTERIOR
-    HOMEDECOR
+  KITCHEN
+  WARDROBE
+  SHOERACK
+  PARTITION
+  DRESSER
+  WALLDESIGN
+  INTERIOR
+  DOORS
+  EXTERIOR
+  HOMEDECOR
 }
 
 enum OrderStatus {
-    PENDING
-    SHIPPED
-    DELIVERED
-    CANCELLED
+  PENDING
+  SHIPPED
+  DELIVERED
+  CANCELLED
 }
 
 enum Type {
-    MDF
-    HDMR
-    TEAKWOOD
-    FLUSH
+  MDF
+  HDMR
+  TEAKWOOD
+  FLUSH
 }
 
 enum FeatureType {
-    QUALITY
-    MATERIAL
-    COLOR
-    DIMENSION
-    FEATURES
+  QUALITY
+  MATERIAL
+  COLOR
+  DIMENSION
+  FEATURES
 }
 
 model Product {
-    id              String          @id @default(cuid())
-    name            String
-    description     String
-    stock           Int
-    slug            String
-    category        Category
-    features        Features[]
-    price           Float
-    costPerFoot     CostPerFoot[]
-    isFeatured      Boolean         @default(false)
-    isPromoted      Boolean         @default(false)
-    promotionStart  DateTime?
-    promotionEnd    DateTime?
-    variablePricing Boolean         @default(true)
-    discountPrice   Float?
-    visible         Boolean         @default(true)
-    images          Image[]
-    orderItems      OrderItem[]
-    createdAt       DateTime        @default(now())
-    updatedAt       DateTime        @updatedAt
-    review          Review[]
-    options         ProductOption[]
+  id              String          @id @default(cuid())
+  name            String
+  description     String
+  stock           Int
+  slug            String
+  category        Category
+  features        Features[]
+  price           Float
+  costPerFoot     CostPerFoot[]
+  isFeatured      Boolean         @default(false)
+  isPromoted      Boolean         @default(false)
+  promotionStart  DateTime?
+  promotionEnd    DateTime?
+  variablePricing Boolean         @default(true)
+  discountPrice   Float?
+  visible         Boolean         @default(true)
+  images          Image[]
+  orderItems      OrderItem[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  review          Review[]
+  options         ProductOption[]
+  Cart            Cart[]
 }
 
 model ProductOption {
-    id        String   @id @default(cuid())
-    type      String
-    value     String
-    Product   Product? @relation(fields: [productId], references: [id])
-    productId String?
+  id        String   @id @default(cuid())
+  type      String
+  value     String
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId String?
+  Cart      Cart[]
 }
 
 model Features {
-    id          String      @id @default(cuid())
-    featureType FeatureType
-    feature     String
-    productId   String?
-    product     Product?    @relation(fields: [productId], references: [id])
+  id          String      @id @default(cuid())
+  featureType FeatureType
+  feature     String
+  productId   String?
+  product     Product?    @relation(fields: [productId], references: [id])
 }
 
 model CostPerFoot {
-    id        String   @id @default(cuid())
-    typeof    Type
-    cost      Int
-    productId String
-    product   Product? @relation(fields: [productId], references: [id])
+  id        String   @id @default(cuid())
+  typeof    Type
+  cost      Int
+  productId String
+  product   Product? @relation(fields: [productId], references: [id])
 }
 
 model Image {
-    id        String  @id @default(cuid())
-    url       String
-    productId String
-    product   Product @relation(fields: [productId], references: [id])
+  id        String  @id @default(cuid())
+  url       String
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
 }
 
 model Order {
-    id          String      @id @default(cuid())
-    userId      String
-    user        User        @relation(fields: [userId], references: [id])
-    orderItems  OrderItem[]
-    totalAmount Float
-    status      OrderStatus @default(PENDING)
-    createdAt   DateTime    @default(now())
-    updatedAt   DateTime    @updatedAt
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+  orderItems  OrderItem[]
+  totalAmount Float
+  status      OrderStatus @default(PENDING)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
 
 model OrderItem {
-    id        String  @id @default(cuid())
-    orderId   String
-    order     Order   @relation(fields: [orderId], references: [id])
-    productId String
-    product   Product @relation(fields: [productId], references: [id])
-    quantity  Int
-    price     Float
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Float
 }
 
 model Review {
-    id        String   @id @default(cuid())
-    rating    Int
-    comment   String?
-    productId String
-    product   Product  @relation(fields: [productId], references: [id])
-    userId    String
-    user      User     @relation(fields: [userId], references: [id])
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String?
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

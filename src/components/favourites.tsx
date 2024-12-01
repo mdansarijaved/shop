@@ -54,7 +54,7 @@ export async function Favourites() {
                 className="block cursor-pointer transition-all duration-300 group h-full"
               >
                 <div className="relative w-full h-[400px] overflow-hidden rounded-lg ">
-                  <Carousel className="w-full h-full">
+                  {/* <Carousel className="w-full h-full">
                     <CarouselContent className="h-full">
                       {item.images.map((url) => (
                         <CarouselItem key={url.url} className="h-full w-full">
@@ -71,7 +71,15 @@ export async function Favourites() {
                     </CarouselContent>
                     <CarouselPrevious className="left-2 opacity-0 group-hover:opacity-100 transition-opacity" />
                     <CarouselNext className="right-2 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </Carousel>
+                  </Carousel> */}
+                  <Image
+                    src={item.images[0].url}
+                    alt={item.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-300 h-[300px] w-[300px] group-hover:scale-105"
+                    priority
+                  />
                 </div>
                 <div className="mt-4">
                   <h3 className="text-lg font-medium text-gray-900 line-clamp-2">
