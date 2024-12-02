@@ -5,18 +5,52 @@ import { Share2, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProductGallery from "@/components/productGallery";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { getProductById } from "@/actions/product";
 import { useState } from "react";
 import { CalculatePrice } from "@/components/calculatePrice";
 import Loading from "@/components/productLoadingSkeleton";
+import { toast } from "@/hooks/use-toast";
+import { addToCartAction } from "@/actions/cart";
 
 function ProductPage({ params }: { params: { productId: string } }) {
   const [viewMore, setViewMore] = useState(false);
+  const [selectedCostPerFoot, setSelectedCostPerFoot] = useState("");
+  const [quantity, setQuantity] = useState(1);
+
   const { data: product, isLoading } = useQuery({
-    queryKey: ["products"],
+    queryKey: [params.productId],
     queryFn: async () => await getProductById(params.productId),
   });
+
+  const addToCart = useMutation({
+    mutationFn: async () => {
+      if (!product) {
+        throw new Error("Product not found");
+      }
+      return await addToCartAction({
+        productId: product.id,
+        costPerFootId: selectedCostPerFoot || product.costPerFoot[0].id,
+        quantity: quantity,
+        customNotes: "hello jee",
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Added to cart",
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description:
+          error instanceof Error ? error.message : "Failed to add to cart",
+      });
+    },
+  });
+
   if (isLoading) {
     return <Loading />;
   }
@@ -81,7 +115,7 @@ function ProductPage({ params }: { params: { productId: string } }) {
                   product.discountPrice ? "line-through" : ""
                 } `}
               >
-                ₹{product.price}
+                ₹{product.basePrice}
               </span>
               <span className="text-xs font-light ">
                 Prices are based on fixed dimension for your requirement it can
@@ -102,30 +136,34 @@ function ProductPage({ params }: { params: { productId: string } }) {
           <CalculatePrice productMaterialType={product.costPerFoot} />
           {/* Product Options */}
           <div className="space-y-4">
-            {product.category == "KITCHEN" ? (
-              <div>
-                <label className="text-sm font-medium">Material Type</label>
-                <RadioGroup
-                  defaultValue={product.costPerFoot[0].typeof}
-                  className="flex gap-2 mt-2"
-                >
-                  {product.costPerFoot.map((type) => (
-                    <div
-                      key={type.id}
-                      className="flex items-center space-x-2 text-sm lg:text-base"
-                    >
-                      <RadioGroupItem
-                        value={type.typeof}
-                        id={`type-${type.id}`}
-                      />
-                      <label htmlFor={`type-${type.id}`}>
-                        {type.typeof} - ₹{type.cost}/ft
-                      </label>
-                    </div>
-                  ))}
-                </RadioGroup>
-              </div>
-            ) : null}
+            <div>
+              <label className="text-sm font-medium">Material Type</label>
+              <RadioGroup
+                defaultValue={product.costPerFoot[0].typeof}
+                className="flex gap-2 mt-2"
+                onValueChange={(value) => {
+                  const option = product.costPerFoot.find(
+                    (t) => t.typeof === value
+                  );
+                  setSelectedCostPerFoot(option?.id || "");
+                }}
+              >
+                {product.costPerFoot.map((type) => (
+                  <div
+                    key={type.id}
+                    className="flex items-center space-x-2 text-sm lg:text-base"
+                  >
+                    <RadioGroupItem
+                      value={type.typeof}
+                      id={`type-${type.id}`}
+                    />
+                    <label htmlFor={`type-${type.id}`}>
+                      {type.typeof} - ₹{type.cost}/ft
+                    </label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
           </div>
           {product.options ? (
             <div className="space-y-2">
@@ -148,8 +186,12 @@ function ProductPage({ params }: { params: { productId: string } }) {
             </div>
           ) : null}
           <div className="flex gap-4">
-            <Button className="flex-1 bg-blue-600 hover:bg-blue-500 rounded-xl">
-              Add to Cart
+            <Button
+              className="flex-1 bg-blue-600 hover:bg-blue-500 rounded-xl"
+              onClick={() => addToCart.mutate()}
+              disabled={addToCart.isPending}
+            >
+              {addToCart.isPending ? "Adding..." : "Add to Cart"}
             </Button>
             <Button variant="outline" size="icon" className="">
               <Heart className="h-5 w-5" />

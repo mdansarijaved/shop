@@ -1,7 +1,15 @@
 model Cart {
-  id              String        @id @default(cuid())
-  product         Product       @relation(fields: [productId], references: [id])
+  id              String         @id @default(cuid())
+  userId          String
+  product         Product        @relation(fields: [productId], references: [id])
   productId       String
-  option          ProductOption @relation(fields: [productOptionId], references: [id])
-  productOptionId String
+  option          ProductOption? @relation(fields: [productOptionId], references: [id])
+  productOptionId String?
+  costPerFoot     CostPerFoot?   @relation(fields: [costPerFootId], references: [id])
+  costPerFootId   String?
+  quantity        Int            @default(1)
+  customNotes     String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  user            User           @relation(fields: [userId], references: [id])
 }

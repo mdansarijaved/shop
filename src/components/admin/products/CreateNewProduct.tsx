@@ -135,7 +135,6 @@ function CreateNewProduct() {
               <FormControl>
                 <Input
                   type="number"
-                  step="0.01"
                   {...field}
                   onChange={(e) => field.onChange(parseFloat(e.target.value))}
                 />

@@ -14,7 +14,7 @@ export default function Hero() {
           New in from Vishwakarma Woodworks. Traditional craftmanship.
         </p>
         <Link
-          href={"/categories"}
+          href={"/products"}
           className={cn(
             buttonVariants({ variant: "outline" }),
             " px-6 py-3 mt-4  rounded-md"

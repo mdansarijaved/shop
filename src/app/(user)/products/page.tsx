@@ -18,14 +18,14 @@ async function Products() {
       isPromoted: true,
       discountPrice: true,
       slug: true,
-      price: true,
+      basePrice: true,
     },
   });
   return (
     <div className=" px-4 mx-auto  md:flex gap-4">
       <div className="w-full space-y-4 pt-6 pb-20">
         <CategoryGrid />
-        <div className="grid xl:grid-cols-6 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 px-10  w-full   ">
+        <div className="grid grid-cols-1 px-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {Products.map((product) => (
             <ProductList key={product.id} product={product} />
           ))}

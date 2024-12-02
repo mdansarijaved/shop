@@ -43,8 +43,8 @@ export async function createProduct(data: ProductFormData): Promise<{
       data: {
         name: data.name,
         description: data.description,
-        price: parseFloat(data.price.toString()),
-        stock: parseInt(data.stock.toString()),
+        basePrice: data.price,
+        stock: data.stock,
         slug,
         category: data.category,
         features: {
@@ -57,6 +57,7 @@ export async function createProduct(data: ProductFormData): Promise<{
           create: data.options?.map((option) => ({
             type: option.type,
             value: option.value,
+            price: option.price,
           })),
         },
         costPerFoot: {
@@ -74,7 +75,9 @@ export async function createProduct(data: ProductFormData): Promise<{
         isFeatured: data.isFeatured,
         promotionEnd: data.promotionEnd,
         promotionStart: data.promotionStart,
-        discountPrice: data.discountPrice,
+        discountPrice: data.discountPrice
+          ? parseFloat(data.discountPrice.toString())
+          : null,
       },
       include: {
         images: true,
@@ -104,10 +107,11 @@ export const getProductById = async (id: string) => {
         slug: id,
       },
       select: {
+        id: true,
         name: true,
         description: true,
         images: true,
-        price: true,
+        basePrice: true,
         discountPrice: true,
         options: true,
         features: true,

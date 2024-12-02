@@ -27,7 +27,7 @@ export const Options = () => {
           type="button"
           variant="outline"
           size="sm"
-          onClick={() => append({ type: "", value: "" })}
+          onClick={() => append({ type: "", value: "", price: 0 })}
         >
           <Plus className="h-4 w-4 mr-2" />
           Add Options
@@ -55,7 +55,25 @@ export const Options = () => {
             render={({ field }) => (
               <FormItem className="flex-1">
                 <FormControl>
-                  <Input {...field} placeholder="Value" />
+                  <Input {...field} placeholder="Description" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name={`options.${index}.price`}
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="price optional"
+                    value={field.value || ""}
+                    type="number"
+                    onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

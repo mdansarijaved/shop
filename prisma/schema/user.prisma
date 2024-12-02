@@ -14,10 +14,31 @@ model User {
   accounts              Account[]
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
+  userdetails           userDetails?           @relation(fields: [userDetailsId], references: [id])
   Order                 Order[]
   Review                Review[]
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
+  Cart                  Cart[]
+  userDetailsId         String?
+}
+
+model userDetails {
+  id        String  @id @default(cuid())
+  address   Address @relation(fields: [addressId], references: [id])
+  phone     String
+  addressId String
+  User      User[]
+}
+
+model Address {
+  id          String        @id @default(cuid())
+  line        String
+  road        String
+  city        String
+  state       String
+  pincode     String
+  userDetails userDetails[]
 }
 
 model Account {

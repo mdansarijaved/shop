@@ -18,7 +18,7 @@ enum OrderStatus {
   CANCELLED
 }
 
-enum Type {
+enum MaterialType {
   MDF
   HDMR
   TEAKWOOD
@@ -41,8 +41,9 @@ model Product {
   slug            String
   category        Category
   features        Features[]
-  price           Float
-  costPerFoot     CostPerFoot[]
+  basePrice       Float
+  costPerFoot     CostPerFoot[] // Material type based pricing
+  options         ProductOption[] // Option based pricing
   isFeatured      Boolean         @default(false)
   isPromoted      Boolean         @default(false)
   promotionStart  DateTime?
@@ -55,7 +56,6 @@ model Product {
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   review          Review[]
-  options         ProductOption[]
   Cart            Cart[]
 }
 
@@ -63,8 +63,18 @@ model ProductOption {
   id        String   @id @default(cuid())
   type      String
   value     String
+  price     Float    @default(0) // Price for this option
   Product   Product? @relation(fields: [productId], references: [id])
   productId String?
+  Cart      Cart[]
+}
+
+model CostPerFoot {
+  id        String       @id @default(cuid())
+  typeof    MaterialType
+  cost      Float // Changed from Int to Float for more precise pricing
+  productId String
+  product   Product?     @relation(fields: [productId], references: [id])
   Cart      Cart[]
 }
 
@@ -74,14 +84,6 @@ model Features {
   feature     String
   productId   String?
   product     Product?    @relation(fields: [productId], references: [id])
-}
-
-model CostPerFoot {
-  id        String   @id @default(cuid())
-  typeof    Type
-  cost      Int
-  productId String
-  product   Product? @relation(fields: [productId], references: [id])
 }
 
 model Image {

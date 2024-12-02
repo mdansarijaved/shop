@@ -76,7 +76,7 @@ function Footer() {
               className="w-full placeholder:text-[#757575] outline-none px-4 py-2 md:px-6 md:py-4 bg-[#f7f8f7]"
               placeholder="Enter your email"
             />
-            <button className="bg-black text-white text-sm md:text-base px-4 md:px-12 font-semibold">
+            <button className="bg-blue-600 text-white text-sm md:text-base px-4 md:px-12 font-semibold">
               Subscribe
             </button>
           </form>

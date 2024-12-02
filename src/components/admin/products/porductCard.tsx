@@ -21,7 +21,7 @@ interface products {
   };
   id: string;
   name: string;
-  price: number;
+  basePrice: number;
   stock: number;
   images: {
     id: string;
@@ -89,7 +89,7 @@ export default function ProductCard({ product }: { product: products }) {
             </div>
             <div className="flex items-center">
               <span className="text-lg font-bold">
-                Rs.{product.price.toFixed(2)}
+                Rs.{product.basePrice.toFixed(2)}
               </span>
             </div>
           </div>
