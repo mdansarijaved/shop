@@ -27,7 +27,7 @@ function Footer() {
   ];
   return (
     <footer>
-      <div className="px-10 mx-auto flex gap-24 justify-between mb-10 border-t pt-10">
+      {/* <div className="px-10 mx-auto flex gap-24 justify-between mb-10 border-t pt-10">
         <div className="  w-full lg:flex justify-between hidden">
           <div className="text-sm">
             <h1 className="font-bold mb-2">Furniture</h1>
@@ -81,7 +81,7 @@ function Footer() {
             </button>
           </form>
         </div>
-      </div>
+      </div> */}
       <Socials />
     </footer>
   );

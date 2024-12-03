@@ -9,19 +9,19 @@ export default function Socials() {
       name: "Talk to us",
       link: "/",
       icon: <Phone className="size-4" />,
-      desc: "1200-123-4567",
+      desc: "8091175856",
     },
     {
-      name: "Helpcentre",
+      name: "Address",
       link: "/",
       icon: <CircleHelp className="size-4" />,
-      desc: "home.in/help",
+      desc: "Shop no. 32-33, Jhungian Road, Opposite NRI enclave, Kharar",
     },
     {
       name: "Write to us",
       link: "/",
       icon: <Mail className="size-4" />,
-      desc: "help@me.in",
+      desc: "info@vishwakarmawoodworks.com",
     },
   ];
 

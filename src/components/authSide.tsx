@@ -20,7 +20,7 @@ export function AuthSide() {
       />
       <Link href={"/"} className="absolute top-10 left-10">
         <Image
-          src={"/Ecomm-Logo.jpg"}
+          src={"/logo.png"}
           width={1000}
           height={1000}
           alt="side"
