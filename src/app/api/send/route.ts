@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { formatPrice } from "@/lib/utils";
+import { env } from "@/env";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   try {
@@ -54,7 +55,7 @@ Shop Team
     // Email to admin
     await resend.emails.send({
       from: "Shop <orders@resend.dev>",
-      to: process.env.ADMIN_EMAIL!,
+      to: "javedet@gmail.com",
       subject: "New Order Received",
       text: `
 New order received!

@@ -7,6 +7,7 @@ export const env = createEnv({
     DATABASE_URL: z.string().url(),
     NODE_ENV: z.string(),
     IMAGEKIT_SECRET: z.string(),
+    RESEND_API_KEY: z.string(),
   },
   client: {
     NEXT_PUBLIC_IMAGEKIT_KEY: z.string(),
@@ -15,6 +16,7 @@ export const env = createEnv({
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
     NEXT_PUBLIC_IMAGEKIT_KEY: process.env.NEXT_PUBLIC_IMAGEKIT_KEY,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
     NEXT_PUBLIC_IMGKIT_URL: process.env.NEXT_PUBLIC_IMGKIT_URL,
     IMAGEKIT_SECRET: process.env.IMAGEKIT_SECRET,
     NODE_ENV:
