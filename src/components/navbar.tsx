@@ -29,7 +29,7 @@ export async function Navbar() {
       link: "/",
       icon: (
         <Image
-          src="/Ecomm-Logo.jpg"
+          src="/logo.png"
           alt="Large Image"
           width={500}
           height={500}
