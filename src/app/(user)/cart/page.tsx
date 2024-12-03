@@ -1,9 +1,8 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import Image from "next/image";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,12 +14,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { formatPrice } from "@/lib/utils";
 import { getCart, removeFromCartAction } from "@/actions/cart";
 import { toast } from "@/hooks/use-toast";
 import { CartSkeleton } from "@/components/cartSkeleton";
+import { CheckoutModal } from "@/components/checkout-modal";
+import { useState } from "react";
 
 export default function CartPage() {
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const queryClient = useQueryClient();
   const {
     data: cartItems,
@@ -48,6 +49,7 @@ export default function CartPage() {
       });
     },
   });
+
   if (isLoading) {
     return <CartSkeleton />;
   }
@@ -60,8 +62,6 @@ export default function CartPage() {
       </div>
     );
   }
-
-  const updateQuantity = (id: string) => {};
 
   const calculateTotal = () => {
     if (!cartItems) return 0;
@@ -122,11 +122,22 @@ export default function CartPage() {
           <div className="text-lg font-semibold">
             Total: ₹{calculateTotal()}
           </div>
-          <Button className="bg-blue-600 hover:bg-blue-500" size="lg">
+          <Button
+            className="bg-blue-600 hover:bg-blue-500"
+            size="lg"
+            onClick={() => setIsCheckoutOpen(true)}
+          >
             Checkout
           </Button>
         </CardFooter>
       </Card>
+
+      <CheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        cartItems={cartItems}
+        total={calculateTotal()}
+      />
     </div>
   );
 }

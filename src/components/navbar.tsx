@@ -1,10 +1,7 @@
 import React from "react";
 import {
-  BedSingle,
-  HomeIcon,
   ShoppingCart,
   User2,
-  Utensils,
   ShoppingBag,
   Settings,
   LogOut,
@@ -22,6 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { SearchBar } from "./search-bar";
 
 export async function Navbar() {
   const user = await auth();
@@ -79,13 +77,7 @@ export async function Navbar() {
         ))}
       </div>
       <div className=" py-3 bg-[#fefefe] dark:bg-black  flex justify-center rounded-xl items-center gap-4 md:gap-5 lg:gap-7 xl:gap-6 mx-auto md:mx-0">
-        <form action="" className=" xl:w-96 ">
-          <input
-            type="text"
-            className="w-full bg-gray-100  px-4 py-2 rounded-md placeholder:text-[#757575] outline-none"
-            placeholder="Search for Products..."
-          />
-        </form>
+        <SearchBar />
         {navItemsRight.map((nav, index) => (
           <Link key={index} href={nav.link}>
             {nav.icon}

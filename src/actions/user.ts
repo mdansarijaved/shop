@@ -86,3 +86,23 @@ export async function updateUserDetails(values: {
 
   return await getUserDetails();
 }
+
+export const getCurrentUser = async () => {
+  const user = await auth();
+  if (!user) {
+    return;
+  }
+  const currentUser = await db.user.findUnique({
+    where: {
+      email: user.user.email!,
+    },
+    include: {
+      userdetails: {
+        include: {
+          address: true,
+        },
+      },
+    },
+  });
+  return currentUser;
+};
