@@ -12,7 +12,6 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import Image from "next/image";
-import Link from "next/link";
 
 export function SearchBar() {
   const router = useRouter();
@@ -90,28 +89,26 @@ export function SearchBar() {
               </CommandEmpty>
               <CommandGroup heading="Products">
                 {results.map((product) => (
-                  <Link href={`products/${product.slug}`}>
-                    <CommandItem
-                      key={product.id}
-                      onSelect={() => handleSelect(product.id)}
-                      className="flex items-center gap-2 p-2"
-                    >
-                      <div className="relative h-10 w-10">
-                        <Image
-                          src={product.images[0]?.url || "/placeholder.png"}
-                          alt={product.name}
-                          fill
-                          className="object-cover rounded-md"
-                        />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">{product.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          ₹{product.basePrice}
-                        </p>
-                      </div>
-                    </CommandItem>
-                  </Link>
+                  <CommandItem
+                    key={product.id}
+                    onSelect={() => handleSelect(product.id)}
+                    className="flex items-center gap-2 p-2"
+                  >
+                    <div className="relative h-10 w-10">
+                      <Image
+                        src={product.images[0]?.url || "/placeholder.png"}
+                        alt={product.name}
+                        fill
+                        className="object-cover rounded-md"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">{product.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        ₹{product.basePrice}
+                      </p>
+                    </div>
+                  </CommandItem>
                 ))}
               </CommandGroup>
             </CommandList>

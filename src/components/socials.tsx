@@ -84,7 +84,7 @@ export default function Socials() {
       </div>
       <div className="flex flex-col sm:flex-row items-center justify-between my-3">
         <Image
-          src="/Ecomm-Logo.jpg"
+          src="/logo.png"
           alt="Vishwakarma Woodworks Logo"
           width={100}
           height={100}
