@@ -35,7 +35,7 @@ export async function BestSeller() {
       >
         <CarouselContent>
           {products.map((product, index) => (
-            <Link href={`/product/${product.slug}`}>
+            <Link href={`/products/${product.slug}`}>
               <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                 <div className=" m-1 group relative cursor-pointer ">
                   <Card>
