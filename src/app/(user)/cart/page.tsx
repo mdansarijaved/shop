@@ -22,10 +22,36 @@ import { CartSkeleton } from "@/components/cartSkeleton";
 import { CheckoutModal } from "@/components/checkout-modal";
 import { getSession } from "@/actions/user";
 
+// Define types for our cart items
+type LoggedInCartItem = {
+  id: string;
+  product: {
+    id: string;
+    name: string;
+    basePrice: number;
+    images: { url: string }[];
+  };
+  quantity: number;
+};
+
+type GuestCartItem = {
+  productId: string;
+  costPerFootId: string;
+  product: {
+    name: string;
+    basePrice: number;
+    images: { url: string }[];
+  };
+  quantity: number;
+};
+
+type CartItem = LoggedInCartItem | GuestCartItem;
+
 export default function CartPage() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [localCartItems, setLocalCartItems] = useState([]);
+  const [localCartItems, setLocalCartItems] = useState<GuestCartItem[]>([]);
   const queryClient = useQueryClient();
+
   const { data: session } = useQuery({
     queryKey: ["user"],
     queryFn: getSession,
@@ -42,17 +68,26 @@ export default function CartPage() {
 
   useEffect(() => {
     if (!session) {
-      const storedCart = JSON.parse(localStorage.getItem("guestCart") || "[]");
+      const storedCart = JSON.parse(
+        localStorage.getItem("guestCart") || "[]"
+      ) as GuestCartItem[];
       setLocalCartItems(storedCart);
     }
   }, [session]);
 
   const removeItem = useMutation({
-    mutationFn: async (itemId: string) => {
+    mutationFn: async (item: CartItem) => {
       if (session) {
-        return removeFromCartAction(itemId);
+        return removeFromCartAction((item as LoggedInCartItem).id);
       } else {
-        const updatedCart = localCartItems.filter((item) => item.id !== itemId);
+        const guestItem = item as GuestCartItem;
+        const updatedCart = localCartItems.filter(
+          (cartItem) =>
+            !(
+              cartItem.productId === guestItem.productId &&
+              cartItem.costPerFootId === guestItem.costPerFootId
+            )
+        );
         localStorage.setItem("guestCart", JSON.stringify(updatedCart));
         setLocalCartItems(updatedCart);
         return { success: true };
@@ -71,7 +106,8 @@ export default function CartPage() {
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message || "Failed to remove item",
+        description:
+          error instanceof Error ? error.message : "Failed to remove item",
       });
     },
   });
@@ -80,7 +116,9 @@ export default function CartPage() {
     return <CartSkeleton />;
   }
 
-  const cartItems = session ? cartData?.cartItems : localCartItems;
+  const cartItems: CartItem[] = session
+    ? (cartData?.cartItems as LoggedInCartItem[])
+    : localCartItems;
 
   if (!cartItems?.length) {
     return (
@@ -93,8 +131,7 @@ export default function CartPage() {
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => {
-      const itemPrice = item.product.basePrice * item.quantity;
-      return total + itemPrice;
+      return total + (item.product?.basePrice || 0) * (item.quantity || 1);
     }, 0);
   };
 
@@ -114,26 +151,34 @@ export default function CartPage() {
             </TableHeader>
             <TableBody>
               {cartItems.map((item) => (
-                <TableRow key={item.id}>
+                <TableRow
+                  key={
+                    session
+                      ? (item as LoggedInCartItem).id
+                      : `${(item as GuestCartItem).productId}-${
+                          (item as GuestCartItem).costPerFootId
+                        }`
+                  }
+                >
                   <TableCell className="flex items-center gap-4">
                     <Image
-                      src={item.product.images[0].url}
-                      alt={item.product.name}
+                      src={item.product?.images?.[0]?.url || "/placeholder.svg"}
+                      alt={item.product?.name || "Product"}
                       width={80}
                       height={80}
                       className="rounded-md"
                     />
-                    <span>{item.product.name}</span>
+                    <span>{item.product?.name || "Unknown Product"}</span>
                   </TableCell>
-                  <TableCell>₹{item.product.basePrice}</TableCell>
+                  <TableCell>₹{item.product?.basePrice || 0}</TableCell>
                   <TableCell>
-                    ₹{item.product.basePrice * item.quantity}
+                    ₹{(item.product?.basePrice || 0) * (item.quantity || 1)}
                   </TableCell>
                   <TableCell>
                     <Button
                       variant="destructive"
                       size="icon"
-                      onClick={() => removeItem.mutate(item.id)}
+                      onClick={() => removeItem.mutate(item)}
                       disabled={removeItem.isPending}
                     >
                       <Trash2 className="h-4 w-4" />
