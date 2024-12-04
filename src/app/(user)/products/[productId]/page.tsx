@@ -7,16 +7,21 @@ import ProductGallery from "@/components/productGallery";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { getProductById } from "@/actions/product";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CalculatePrice } from "@/components/calculatePrice";
 import Loading from "@/components/productLoadingSkeleton";
 import { toast } from "@/hooks/use-toast";
-import { addToCartAction } from "@/actions/cart";
+import { addToCartAction, syncGuestCart } from "@/actions/cart";
+import { getSession } from "@/actions/user";
 
 function ProductPage({ params }: { params: { productId: string } }) {
   const [viewMore, setViewMore] = useState(false);
   const [selectedCostPerFoot, setSelectedCostPerFoot] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const { data: session } = useQuery({
+    queryKey: ["user"],
+    queryFn: getSession,
+  });
 
   const { data: product, isLoading } = useQuery({
     queryKey: [params.productId],
@@ -35,11 +40,22 @@ function ProductPage({ params }: { params: { productId: string } }) {
         customNotes: "hello jee",
       });
     },
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Added to cart",
-      });
+    onSuccess: (data) => {
+      if (data.isGuest) {
+        // Store in localStorage for guest users
+        const guestCart = JSON.parse(localStorage.getItem("guestCart") || "[]");
+        guestCart.push(data.cartItem);
+        localStorage.setItem("guestCart", JSON.stringify(guestCart));
+        toast({
+          title: "Success",
+          description: "Added to guest cart",
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Added to cart",
+        });
+      }
     },
     onError: (error) => {
       toast({
@@ -51,13 +67,35 @@ function ProductPage({ params }: { params: { productId: string } }) {
     },
   });
 
+  useEffect(() => {
+    if (session?.user) {
+      const guestCart = JSON.parse(localStorage.getItem("guestCart") || "[]");
+      if (guestCart.length > 0) {
+        syncGuestCart(guestCart)
+          .then(() => {
+            localStorage.removeItem("guestCart");
+            toast({
+              title: "Cart Synced",
+              description: "Your guest cart has been added to your account",
+            });
+          })
+          .catch((error) => {
+            toast({
+              variant: "destructive",
+              title: "Error",
+              description: `Failed to sync guest cart ${error}`,
+            });
+          });
+      }
+    }
+  }, [session]);
+
   if (isLoading) {
     return <Loading />;
   }
   if (!product) {
     notFound();
   }
-
   return (
     <div className=" mx-auto px-4 lg:px-10 py-8">
       <div className="grid lg:grid-cols-2 gap-4">

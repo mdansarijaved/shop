@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/form";
 import { login } from "@/actions/login";
 import { toast } from "sonner";
+import { redirect, useRouter } from "next/navigation";
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
@@ -45,11 +46,12 @@ export default function LoginPage() {
       password: "",
     },
   });
-
+  const router = useRouter();
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: () => {
       toast("login successfull");
+      router.push("/");
     },
     onError: (error: Error) => {
       setAuthError(error.message);

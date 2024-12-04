@@ -3,6 +3,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,13 +20,19 @@ import { getCart, removeFromCartAction } from "@/actions/cart";
 import { toast } from "@/hooks/use-toast";
 import { CartSkeleton } from "@/components/cartSkeleton";
 import { CheckoutModal } from "@/components/checkout-modal";
-import { useState } from "react";
+import { getSession } from "@/actions/user";
 
 export default function CartPage() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [localCartItems, setLocalCartItems] = useState([]);
   const queryClient = useQueryClient();
+  const { data: session } = useQuery({
+    queryKey: ["user"],
+    queryFn: getSession,
+  });
+
   const {
-    data: cartItems,
+    data: cartData,
     isLoading,
     refetch,
   } = useQuery({
@@ -32,10 +40,28 @@ export default function CartPage() {
     queryFn: () => getCart(),
   });
 
+  useEffect(() => {
+    if (!session) {
+      const storedCart = JSON.parse(localStorage.getItem("guestCart") || "[]");
+      setLocalCartItems(storedCart);
+    }
+  }, [session]);
+
   const removeItem = useMutation({
-    mutationFn: removeFromCartAction,
+    mutationFn: async (itemId: string) => {
+      if (session) {
+        return removeFromCartAction(itemId);
+      } else {
+        const updatedCart = localCartItems.filter((item) => item.id !== itemId);
+        localStorage.setItem("guestCart", JSON.stringify(updatedCart));
+        setLocalCartItems(updatedCart);
+        return { success: true };
+      }
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      if (session) {
+        queryClient.invalidateQueries({ queryKey: ["cart"] });
+      }
       toast({
         title: "Success",
         description: "Item removed from cart",
@@ -50,9 +76,11 @@ export default function CartPage() {
     },
   });
 
-  if (isLoading) {
+  if (isLoading && session) {
     return <CartSkeleton />;
   }
+
+  const cartItems = session ? cartData?.cartItems : localCartItems;
 
   if (!cartItems?.length) {
     return (
@@ -64,8 +92,6 @@ export default function CartPage() {
   }
 
   const calculateTotal = () => {
-    if (!cartItems) return 0;
-
     return cartItems.reduce((total, item) => {
       const itemPrice = item.product.basePrice * item.quantity;
       return total + itemPrice;
@@ -105,7 +131,7 @@ export default function CartPage() {
                   </TableCell>
                   <TableCell>
                     <Button
-                      variant={"destructive"}
+                      variant="destructive"
                       size="icon"
                       onClick={() => removeItem.mutate(item.id)}
                       disabled={removeItem.isPending}

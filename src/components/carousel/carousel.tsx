@@ -6,30 +6,6 @@ import { CarouselDots } from "./CarouselDots";
 
 export const images = ["/home1.jpg", "/home2.jpg", "/home3.jpg", "/home4.jpg"];
 
-const NavigationButton = memo(
-  ({
-    direction,
-    onClick,
-    children,
-  }: {
-    direction: "left" | "right";
-    onClick: () => void;
-    children: React.ReactNode;
-  }) => (
-    <button
-      onClick={onClick}
-      className={`absolute ${
-        direction === "left" ? "left-4" : "right-4"
-      } top-1/2 -translate-y-1/2 z-10 
-      p-2 rounded-full bg-black/20 hover:bg-black/40 transition-colors duration-300 
-      will-change-transform active:scale-95`}
-      aria-label={`${direction === "left" ? "Previous" : "Next"} slide`}
-    >
-      {children}
-    </button>
-  )
-);
-
 export const Carousel: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<"next" | "prev">("next");
@@ -80,14 +56,8 @@ export const Carousel: React.FC = () => {
 
   if (!allLoaded) {
     return (
-      <div className="w-full h-full bg-gray-900 flex items-center justify-center">
-        <div className="text-white text-xl">
-          <div className="animate-pulse">Loading images...</div>
-          <div className="text-sm mt-2 text-gray-400">
-            {Object.values(imageStates).filter((state) => state.loaded).length}{" "}
-            / {images.length} loaded
-          </div>
-        </div>
+      <div className="w-full h-full  flex items-center justify-center">
+        <div className="text-white text-xl"></div>
       </div>
     );
   }

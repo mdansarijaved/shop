@@ -106,3 +106,8 @@ export const getCurrentUser = async () => {
   });
   return currentUser;
 };
+
+export const getSession = async () => {
+  const user = await auth();
+  return user;
+};

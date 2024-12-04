@@ -10,19 +10,6 @@ export const addToCartAction = async (cartItem: {
   customNotes?: string;
 }) => {
   const session = await auth();
-  if (!session?.user?.id) {
-    throw new Error("User not authenticated");
-  }
-
-  // Check if the user exists
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-  });
-
-  if (!user) {
-    throw new Error("User not found");
-  }
-
   const { customNotes, productId, costPerFootId, quantity } = cartItem;
 
   // Check if the product exists
@@ -44,71 +31,101 @@ export const addToCartAction = async (cartItem: {
     throw new Error("Cost per foot option not found");
   }
 
-  // Create the cart item
-  const cartItems = await db.cart.create({
-    data: {
-      quantity,
-      customNotes,
-      userId: user.id,
-      costPerFootId,
-      productId,
-    },
-    include: {
-      product: {
-        include: {
-          costPerFoot: true,
+  if (session?.user?.id) {
+    // User is logged in, add to database
+    const cartItems = await db.cart.create({
+      data: {
+        quantity,
+        customNotes,
+        userId: session.user.id,
+        costPerFootId,
+        productId,
+      },
+      include: {
+        product: {
+          include: {
+            costPerFoot: true,
+          },
         },
       },
-    },
-  });
+    });
+    return { cartItems, isGuest: false };
+  } else {
+    // User is not logged in, return data to be stored in localStorage
+    return {
+      cartItem: {
+        productId,
+        costPerFootId,
+        quantity,
+        customNotes,
+      },
+      isGuest: true,
+    };
+  }
+};
 
-  return cartItems;
+export const syncGuestCart = async (guestCartItems: any[]) => {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("User not authenticated");
+  }
+
+  const syncedItems = await Promise.all(
+    guestCartItems.map(async (item) => {
+      return await db.cart.create({
+        data: {
+          quantity: item.quantity,
+          customNotes: item.customNotes,
+          userId: session.user.id,
+          costPerFootId: item.costPerFootId,
+          productId: item.productId,
+        },
+      });
+    })
+  );
+
+  return syncedItems;
 };
 
 export async function getCart() {
   const session = await auth();
-  if (!session?.user?.id) {
-    throw new Error("User not authenticated");
+  if (session?.user?.id) {
+    // User is logged in, fetch from database
+    const cartItems = await db.cart.findMany({
+      where: { userId: session.user.id },
+      include: {
+        product: {
+          include: {
+            images: true,
+            costPerFoot: true,
+          },
+        },
+        option: {
+          select: {
+            id: true,
+            type: true,
+            value: true,
+            price: true,
+          },
+        },
+        user: true,
+      },
+    });
+    return { cartItems, isGuest: false };
+  } else {
+    // User is not logged in, return null to indicate client-side handling
+    return { cartItems: null, isGuest: true };
   }
-
-  const cartItems = await db.cart.findMany({
-    where: { userId: session.user.id },
-    include: {
-      // Changed from select to include
-      product: {
-        include: {
-          images: true,
-          costPerFoot: true,
-        },
-      },
-      option: {
-        // Include the ProductOption relation
-        select: {
-          id: true,
-          type: true,
-          value: true,
-          price: true,
-        },
-      },
-      user: true,
-    },
-  });
-
-  return cartItems;
 }
 
-export const removeFromCartAction = async (cartId: string) => {
+export async function removeFromCartAction(itemId: string) {
   const session = await auth();
-  if (!session?.user?.id) {
-    throw new Error("User not authenticated");
+  if (session?.user?.id) {
+    // User is logged in, remove from database
+    await db.cart.delete({
+      where: { id: itemId, userId: session.user.id },
+    });
   }
-
-  const deletedItem = await db.cart.delete({
-    where: {
-      id: cartId,
-      userId: session.user.id, // Ensure user owns this cart item
-    },
-  });
-
-  return deletedItem;
-};
+  // For guest users, removal will be handled client-side
+  return { success: true };
+}
