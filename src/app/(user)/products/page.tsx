@@ -4,6 +4,9 @@ import { db } from "@/lib/db";
 
 async function Products() {
   const Products = await db.product.findMany({
+    where: {
+      visible: true,
+    },
     select: {
       id: true,
       name: true,

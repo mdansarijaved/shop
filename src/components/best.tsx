@@ -17,6 +17,7 @@ export async function BestSeller() {
   const products = await db.product.findMany({
     where: {
       isPromoted: true,
+      visible: true,
     },
     include: {
       images: true,

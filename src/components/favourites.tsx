@@ -6,6 +6,7 @@ export async function Favourites() {
   const products = await db.product.findMany({
     where: {
       isFeatured: true,
+      visible: true,
     },
     include: {
       images: true,
