@@ -143,7 +143,6 @@ export const getProducts = async () => {
       throw new Error("Product not found");
     }
 
-    console.log("Product", product);
     return product;
   } catch (error) {
     console.log(error);

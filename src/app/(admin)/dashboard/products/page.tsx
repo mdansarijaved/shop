@@ -15,21 +15,17 @@ export default function ProductTable() {
     queryFn: () => getProducts(),
   });
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   if (isError) {
     return <div>Error loading products.</div>;
   }
 
-  if (!products || products.length === 0) {
-    return <div>No products found</div>;
-  }
-
   return (
     <div className="w-full p-5">
-      <ProductDataTable columns={productColumns} data={products} />
+      <ProductDataTable
+        columns={productColumns}
+        data={products!}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

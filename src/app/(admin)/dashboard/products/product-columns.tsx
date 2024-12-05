@@ -55,10 +55,12 @@ export const productColumns: ColumnDef<Product>[] = [
       const price = row.original.basePrice;
       return <div>₹{price}</div>;
     },
+    sortingFn: "basic",
   },
   {
     accessorKey: "stock",
     header: "Stock",
+    sortingFn: "basic",
   },
   {
     accessorKey: "discountPrice",

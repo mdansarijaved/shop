@@ -111,3 +111,30 @@ export const getSession = async () => {
   const user = await auth();
   return user;
 };
+
+export const getUsers = async () => {
+  try {
+    const users = await db.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        userdetails: {
+          select: {
+            phone: true,
+            address: true,
+          },
+        },
+      },
+    });
+
+    if (!users) {
+      throw new Error("No current users");
+    }
+
+    return users;
+  } catch (error) {
+    console.log(error);
+  }
+};
