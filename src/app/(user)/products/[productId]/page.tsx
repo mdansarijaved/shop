@@ -1,6 +1,6 @@
 "use client";
 
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { Share2, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProductGallery from "@/components/productGallery";
@@ -13,11 +13,14 @@ import Loading from "@/components/productLoadingSkeleton";
 import { toast } from "@/hooks/use-toast";
 import { addToCartAction, syncGuestCart } from "@/actions/cart";
 import { getSession } from "@/actions/user";
+import { Input } from "@/components/ui/input";
 
 function ProductPage({ params }: { params: { productId: string } }) {
   const [viewMore, setViewMore] = useState(false);
   const [selectedCostPerFoot, setSelectedCostPerFoot] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [customNotes, setCustomNotes] = useState("");
+  const router = useRouter();
   const { data: session } = useQuery({
     queryKey: ["user"],
     queryFn: getSession,
@@ -33,62 +36,35 @@ function ProductPage({ params }: { params: { productId: string } }) {
       if (!product) {
         throw new Error("Product not found");
       }
+      if (!session) {
+        router.push("/auth/login");
+        throw new Error("User not authenticated");
+      }
       return await addToCartAction({
         productId: product.id,
         costPerFootId: selectedCostPerFoot || product.costPerFoot[0].id,
         quantity: quantity,
-        customNotes: "hello jee",
+        customNotes,
       });
     },
     onSuccess: (data) => {
-      if (data.isGuest) {
-        // Store in localStorage for guest users
-        const guestCart = JSON.parse(localStorage.getItem("guestCart") || "[]");
-        guestCart.push(data.cartItem);
-        localStorage.setItem("guestCart", JSON.stringify(guestCart));
-        toast({
-          title: "Success",
-          description: "Added to guest cart",
-        });
-      } else {
-        toast({
-          title: "Success",
-          description: "Added to cart",
-        });
-      }
+      toast({
+        title: "Success",
+        description: "Added to cart",
+      });
+      setCustomNotes("");
     },
     onError: (error) => {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description:
-          error instanceof Error ? error.message : "Failed to add to cart",
-      });
+      if (error.message !== "User not authenticated") {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description:
+            error instanceof Error ? error.message : "Failed to add to cart",
+        });
+      }
     },
   });
-
-  useEffect(() => {
-    if (session?.user) {
-      const guestCart = JSON.parse(localStorage.getItem("guestCart") || "[]");
-      if (guestCart.length > 0) {
-        syncGuestCart(guestCart)
-          .then(() => {
-            localStorage.removeItem("guestCart");
-            toast({
-              title: "Cart Synced",
-              description: "Your guest cart has been added to your account",
-            });
-          })
-          .catch((error) => {
-            toast({
-              variant: "destructive",
-              title: "Error",
-              description: `Failed to sync guest cart ${error}`,
-            });
-          });
-      }
-    }
-  }, [session]);
 
   if (isLoading) {
     return <Loading />;
@@ -173,6 +149,13 @@ function ProductPage({ params }: { params: { productId: string } }) {
           </div>
           <CalculatePrice productMaterialType={product.costPerFoot} />
           {/* Product Options */}
+          <form action="">
+            <Input
+              placeholder="Add message for seller like dimension..."
+              onChange={(e) => setCustomNotes(e.target.value)}
+              value={customNotes}
+            />
+          </form>
           <div className="space-y-4">
             <div>
               <label className="text-sm font-medium">Material Type</label>

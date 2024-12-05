@@ -51,7 +51,9 @@ export default function LoginPage() {
     mutationFn: loginUser,
     onSuccess: () => {
       toast("login successfull");
-      router.push("/");
+      const urlParams = new URLSearchParams(window.location.search);
+      const callbackUrl = urlParams.get("callbackUrl") || "/";
+      router.push(callbackUrl);
     },
     onError: (error: Error) => {
       setAuthError(error.message);

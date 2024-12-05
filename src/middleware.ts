@@ -16,6 +16,7 @@ export default auth((req) => {
   console.log("path: ", nextUrl.pathname);
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isSearchRoute = nextUrl.pathname.startsWith(apiSearchPrefix);
+
   const isPublicRoute =
     publicRoutes.includes(nextUrl.pathname) ||
     nextUrl.pathname.startsWith("/products") ||
@@ -31,18 +32,15 @@ export default auth((req) => {
     }
     return;
   }
-  if (!isLoggedIn && !isPublicRoute) {
-    let callbackURL = nextUrl.pathname;
-    if (nextUrl.search) {
-      callbackURL += nextUrl.search;
-    }
-    const encodedURL = encodeURIComponent(callbackURL);
-    return Response.redirect(new URL(`/auth/login?${encodedURL}`, nextUrl));
+  if (!isLoggedIn && !publicRoutes.includes(nextUrl.pathname)) {
+    const callbackURL = encodeURIComponent(nextUrl.pathname + nextUrl.search);
+    return Response.redirect(
+      new URL(`/auth/login?callbackUrl=${callbackURL}`, nextUrl)
+    );
   }
 
   return;
 });
-
 // Routes Middleware should not run on
 export const config = {
   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],

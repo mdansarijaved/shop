@@ -1,29 +1,35 @@
-import AllProudct from "@/components/admin/products/AllProudct";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CreateCategories from "@/components/admin/products/CreateCategories";
+"use client";
 
-const TABS = {
-  products: "All Products",
-  lowStock: "Low stock",
-} as const;
+import { useQuery } from "@tanstack/react-query";
+import { ProductDataTable } from "./product-data-table";
+import { getProducts } from "@/actions/product";
+import { productColumns } from "./product-columns";
 
-type TabValue = (typeof TABS)[keyof typeof TABS];
+export default function ProductTable() {
+  const {
+    data: products,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["admin products"],
+    queryFn: () => getProducts(),
+  });
 
-export default function AddProductForm() {
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading products.</div>;
+  }
+
+  if (!products || products.length === 0) {
+    return <div>No products found</div>;
+  }
+
   return (
-    <div className="w-full p-2 md:p-5 xl:p-10">
-      <Tabs defaultValue={TABS.products}>
-        <TabsList>
-          <TabsTrigger value={TABS.products}>Products</TabsTrigger>
-          <TabsTrigger value={TABS.lowStock}>Low in stock</TabsTrigger>
-        </TabsList>
-        <TabsContent className="w-full" value={TABS.products}>
-          <AllProudct />
-        </TabsContent>
-        <TabsContent className="w-full" value={TABS.lowStock}>
-          {/* Add your low stock component here */}
-        </TabsContent>
-      </Tabs>
+    <div className="w-full p-5">
+      <ProductDataTable columns={productColumns} data={products} />
     </div>
   );
 }

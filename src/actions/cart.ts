@@ -12,7 +12,6 @@ export const addToCartAction = async (cartItem: {
   const session = await auth();
   const { customNotes, productId, costPerFootId, quantity } = cartItem;
 
-  // Check if the product exists
   const product = await db.product.findUnique({
     where: { id: productId },
     include: { costPerFoot: true },
@@ -31,37 +30,27 @@ export const addToCartAction = async (cartItem: {
     throw new Error("Cost per foot option not found");
   }
 
-  if (session?.user?.id) {
-    // User is logged in, add to database
-    const cartItems = await db.cart.create({
-      data: {
-        quantity,
-        customNotes,
-        userId: session.user.id,
-        costPerFootId,
-        productId,
-      },
-      include: {
-        product: {
-          include: {
-            costPerFoot: true,
-          },
+  if (!session) {
+    return;
+  }
+  // User is logged in, add to database
+  const cartItems = await db.cart.create({
+    data: {
+      quantity,
+      customNotes,
+      userId: session.user.id,
+      costPerFootId,
+      productId,
+    },
+    include: {
+      product: {
+        include: {
+          costPerFoot: true,
         },
       },
-    });
-    return { cartItems, isGuest: false };
-  } else {
-    // User is not logged in, return data to be stored in localStorage
-    return {
-      cartItem: {
-        productId,
-        costPerFootId,
-        quantity,
-        customNotes,
-      },
-      isGuest: true,
-    };
-  }
+    },
+  });
+  return { cartItems, isGuest: false };
 };
 
 export const syncGuestCart = async (guestCartItems: any[]) => {
