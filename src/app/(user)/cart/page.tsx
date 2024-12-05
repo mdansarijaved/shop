@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,11 +19,9 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { getCart, removeFromCartAction } from "@/actions/cart";
 import { toast } from "@/hooks/use-toast";
 import { CartSkeleton } from "@/components/cartSkeleton";
-import { CheckoutModal } from "@/components/checkout-modal";
-import { getSession } from "@/actions/user";
+import { getSession, getUserDetails } from "@/actions/user";
 
-// Define types for our cart items
-type LoggedInCartItem = {
+type CartItem = {
   id: string;
   product: {
     id: string;
@@ -34,28 +32,24 @@ type LoggedInCartItem = {
   quantity: number;
 };
 
-type GuestCartItem = {
-  productId: string;
-  costPerFootId: string;
-  product: {
-    name: string;
-    basePrice: number;
-    images: { url: string }[];
-  };
-  quantity: number;
-};
-
-type CartItem = LoggedInCartItem | GuestCartItem;
-
 export default function CartPage() {
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [localCartItems, setLocalCartItems] = useState<GuestCartItem[]>([]);
+  const [localCartItems, setLocalCartItems] = useState<CartItem[]>([]);
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const { data: session } = useQuery({
     queryKey: ["user"],
     queryFn: getSession,
   });
+
+  const [userDetails, setUser] =
+    useState<Awaited<ReturnType<typeof getUserDetails>>>();
+
+  useState(() => {
+    getUserDetails().then(setUser);
+  });
+
+  console.log(userDetails);
 
   const {
     data: cartData,
@@ -68,26 +62,17 @@ export default function CartPage() {
 
   useEffect(() => {
     if (!session) {
-      const storedCart = JSON.parse(
-        localStorage.getItem("guestCart") || "[]"
-      ) as GuestCartItem[];
+      const storedCart = JSON.parse(localStorage.getItem("guestCart") || "[]");
       setLocalCartItems(storedCart);
     }
   }, [session]);
 
   const removeItem = useMutation({
-    mutationFn: async (item: CartItem) => {
+    mutationFn: async (itemId: string) => {
       if (session) {
-        return removeFromCartAction((item as LoggedInCartItem).id);
+        return removeFromCartAction(itemId);
       } else {
-        const guestItem = item as GuestCartItem;
-        const updatedCart = localCartItems.filter(
-          (cartItem) =>
-            !(
-              cartItem.productId === guestItem.productId &&
-              cartItem.costPerFootId === guestItem.costPerFootId
-            )
-        );
+        const updatedCart = localCartItems.filter((item) => item.id !== itemId);
         localStorage.setItem("guestCart", JSON.stringify(updatedCart));
         setLocalCartItems(updatedCart);
         return { success: true };
@@ -112,12 +97,30 @@ export default function CartPage() {
     },
   });
 
+  const proceedToCheckout = () => {
+    if (
+      !userDetails ||
+      !userDetails.userdetails?.address ||
+      !userDetails.userdetails.phone
+    ) {
+      router.push("/account");
+      toast({
+        title: "Incomplete Information",
+        description: "Please complete your account details before checkout.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    router.push("/checkout");
+  };
+
   if (isLoading && session) {
     return <CartSkeleton />;
   }
 
   const cartItems: CartItem[] = session
-    ? (cartData?.cartItems as LoggedInCartItem[])
+    ? (cartData?.cartItems as CartItem[])
     : localCartItems;
 
   if (!cartItems?.length) {
@@ -131,7 +134,7 @@ export default function CartPage() {
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => {
-      return total + (item.product?.basePrice || 0) * (item.quantity || 1);
+      return total + item.product.basePrice * item.quantity;
     }, 0);
   };
 
@@ -145,40 +148,34 @@ export default function CartPage() {
               <TableRow>
                 <TableHead>Product</TableHead>
                 <TableHead>Price</TableHead>
+                <TableHead>Quantity</TableHead>
                 <TableHead>Total</TableHead>
                 <TableHead></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {cartItems.map((item) => (
-                <TableRow
-                  key={
-                    session
-                      ? (item as LoggedInCartItem).id
-                      : `${(item as GuestCartItem).productId}-${
-                          (item as GuestCartItem).costPerFootId
-                        }`
-                  }
-                >
+                <TableRow key={item.id}>
                   <TableCell className="flex items-center gap-4">
                     <Image
-                      src={item.product?.images?.[0]?.url || "/placeholder.svg"}
-                      alt={item.product?.name || "Product"}
+                      src={item.product.images[0]?.url || "/placeholder.svg"}
+                      alt={item.product.name}
                       width={80}
                       height={80}
                       className="rounded-md"
                     />
-                    <span>{item.product?.name || "Unknown Product"}</span>
+                    <span>{item.product.name}</span>
                   </TableCell>
-                  <TableCell>₹{item.product?.basePrice || 0}</TableCell>
+                  <TableCell>₹{item.product.basePrice}</TableCell>
+                  <TableCell>{item.quantity}</TableCell>
                   <TableCell>
-                    ₹{(item.product?.basePrice || 0) * (item.quantity || 1)}
+                    ₹{item.product.basePrice * item.quantity}
                   </TableCell>
                   <TableCell>
                     <Button
                       variant="destructive"
                       size="icon"
-                      onClick={() => removeItem.mutate(item)}
+                      onClick={() => removeItem.mutate(item.id)}
                       disabled={removeItem.isPending}
                     >
                       <Trash2 className="h-4 w-4" />
@@ -196,19 +193,12 @@ export default function CartPage() {
           <Button
             className="bg-blue-600 hover:bg-blue-500"
             size="lg"
-            onClick={() => setIsCheckoutOpen(true)}
+            onClick={proceedToCheckout}
           >
-            Checkout
+            Proceed to Checkout
           </Button>
         </CardFooter>
       </Card>
-
-      <CheckoutModal
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
-        cartItems={cartItems}
-        total={calculateTotal()}
-      />
     </div>
   );
 }

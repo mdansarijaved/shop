@@ -37,8 +37,24 @@ function ProductPage({ params }: { params: { productId: string } }) {
         throw new Error("Product not found");
       }
       if (!session) {
-        router.push("/auth/login");
-        throw new Error("User not authenticated");
+        // Handle guest cart
+        const guestCartItem = {
+          productId: product.id,
+          costPerFootId: selectedCostPerFoot || product.costPerFoot[0].id,
+          quantity: quantity,
+          customNotes,
+          product: {
+            name: product.name,
+            basePrice: product.basePrice,
+            images: product.images,
+          },
+        };
+        const existingCart = JSON.parse(
+          localStorage.getItem("guestCart") || "[]"
+        );
+        existingCart.push(guestCartItem);
+        localStorage.setItem("guestCart", JSON.stringify(existingCart));
+        return { isGuest: true };
       }
       return await addToCartAction({
         productId: product.id,
@@ -53,16 +69,15 @@ function ProductPage({ params }: { params: { productId: string } }) {
         description: "Added to cart",
       });
       setCustomNotes("");
+      setQuantity(1);
     },
     onError: (error) => {
-      if (error.message !== "User not authenticated") {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description:
-            error instanceof Error ? error.message : "Failed to add to cart",
-        });
-      }
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description:
+          error instanceof Error ? error.message : "Failed to add to cart",
+      });
     },
   });
 
