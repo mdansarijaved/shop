@@ -45,3 +45,43 @@ export const createOrder = async () => {
 
   return order;
 };
+
+export async function getUserOrders() {
+  try {
+    const user = await auth();
+
+    if (!user) {
+      throw new Error("Unauthorized");
+    }
+
+    const orders = await db.order.findMany({
+      where: {
+        userId: user.user.id,
+      },
+      include: {
+        orderItems: {
+          include: {
+            product: {
+              select: {
+                name: true,
+                images: {
+                  select: {
+                    url: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return orders;
+  } catch (error) {
+    console.error("Error fetching user orders:", error);
+    throw new Error("Failed to fetch orders");
+  }
+}
