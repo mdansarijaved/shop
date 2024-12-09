@@ -32,6 +32,11 @@ export default auth((req) => {
     }
     return;
   }
+
+  if (isPublicRoute) {
+    return;
+  }
+
   if (!isLoggedIn && !publicRoutes.includes(nextUrl.pathname)) {
     const callbackURL = encodeURIComponent(nextUrl.pathname + nextUrl.search);
     return Response.redirect(

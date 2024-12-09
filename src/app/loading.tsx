@@ -6,12 +6,7 @@ function Loading() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted flex flex-col items-center justify-center gap-6 p-4">
       <div className="relative">
-        <Image
-          src={"/Ecomm-Logo.jpg"}
-          width={200}
-          height={100}
-          alt="company logo"
-        />
+        <Image src={"/logo.png"} width={200} height={100} alt="company logo" />
         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
